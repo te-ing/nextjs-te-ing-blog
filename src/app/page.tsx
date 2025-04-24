@@ -10,7 +10,7 @@ export default function Home() {
           <section className="text-center">
             <h1 className="text-4xl font-bold mb-4">Write-ing Code</h1>
             <p className="text-xl text-gray-600">
-              효율성을 높여 행복한 시간을 더 많이 만들고 싶습니다.
+              쉽게 읽을 수 있는 글과 코드를 씁니다.
             </p>
           </section>
 

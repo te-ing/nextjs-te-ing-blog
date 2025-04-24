@@ -11,7 +11,7 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: 'Write-ing Code',
-  description: '불편함을 해결하는 이펙티브 개발자김태중 블로그',
+  description: '쉽게 읽을 수 있는 글과 코드를 씁니다.',
 };
 
 export default function RootLayout({
