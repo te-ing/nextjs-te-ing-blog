@@ -22,6 +22,7 @@ export interface ArticlePreview {
   date: string;
   description: string;
   tags?: string[];
+  fileDate?: string;
 }
 
 function sanitizeFileName(fileName: string): string {
@@ -34,6 +35,14 @@ function sanitizeFileName(fileName: string): string {
 function desanitizeFileName(sanitizedId: string): string {
   // URL에 안전한 형태를 원래 형태로 변환
   return decodeURIComponent(sanitizedId);
+}
+
+function extractDateFromFileName(fileName: string): string {
+  // 파일명의 앞 10글자에서 날짜를 추출
+  const dateStr = fileName.slice(0, 10);
+  // YYYY-MM-DD 형식인지 확인
+  if (!/^\d{4}-\d{2}-\d{2}/.test(dateStr)) return '';
+  return dateStr;
 }
 
 export function getAllArticleIds() {
@@ -71,9 +80,11 @@ export function getAllArticles(): ArticlePreview[] {
     const fullPath = path.join(articlesDirectory, fileName);
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { data } = matter(fileContents);
+    const fileDate = extractDateFromFileName(fileName);
 
     return {
       id,
+      fileDate,
       ...(data as {
         title: string;
         date: string;

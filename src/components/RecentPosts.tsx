@@ -15,10 +15,17 @@ export default function RecentPosts() {
             className="block border-b pb-6 hover:bg-gray-50 transition-colors p-4"
           >
             <article>
-              <h3 className="text-xl font-semibold text-gray-900">
-                {article.title}
-              </h3>
-              <div className="text-gray-600 text-sm mt-2">{article.date}</div>
+              <div className="flex items-center justify-between">
+                <h3 className="text-xl font-semibold text-gray-900">
+                  {article.title}
+                </h3>
+                <div className="text-gray-600 text-sm">
+                  {article.fileDate && (
+                    <span className="mr-2">{article.fileDate}</span>
+                  )}
+                  {article.date}
+                </div>
+              </div>
               <p className="mt-2 text-gray-700">{article.description}</p>
             </article>
           </Link>
