@@ -1,6 +1,19 @@
 import Layout from '@/components/Layout';
 import RecentPosts from '@/components/RecentPosts';
 import FeaturedArticles from '@/components/FeaturedArticles';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Write-ing Code',
+  description: '쉽게 읽을 수 있는 글과 코드를 씁니다.',
+  openGraph: {
+    title: 'Write-ing Code',
+    description: '쉽게 읽을 수 있는 글과 코드를 씁니다.',
+    type: 'website',
+    locale: 'ko_KR',
+    siteName: 'Write-ing Code',
+  },
+};
 
 export default function Home() {
   return (

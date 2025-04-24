@@ -6,10 +6,37 @@ import {
 import Layout from '@/components/Layout';
 import MarkdownContent from '@/components/MarkdownContent';
 import RecommendedPosts from '@/components/RecommendedPosts';
+import { Metadata } from 'next';
 
 export async function generateStaticParams() {
   const paths = getAllArticleIds();
   return paths;
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}): Promise<Metadata> {
+  const { id } = await params;
+  const article = await getArticleData(id);
+
+  return {
+    title: article.title,
+    description: article.description,
+    openGraph: {
+      title: article.title,
+      description: article.description,
+      type: 'article',
+      publishedTime: article.fileDate || article.date,
+      authors: ['te-ing'],
+      locale: 'ko_KR',
+      siteName: 'Write-ing Code',
+    },
+    alternates: {
+      canonical: `https://write-ing-code.vercel.app/post/${id}`,
+    },
+  };
 }
 
 export default async function ArticlePage({
