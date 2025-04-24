@@ -5,12 +5,12 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import TagBox from './TagBox';
 
-interface BlogPostsProps {
+interface PostListProps {
   articles: ArticlePreview[];
   tags: string[];
 }
 
-export default function BlogPosts({ articles, tags }: BlogPostsProps) {
+export default function PostList({ articles, tags }: PostListProps) {
   const searchParams = useSearchParams();
   const selectedTag = searchParams.get('tag');
 
@@ -20,7 +20,7 @@ export default function BlogPosts({ articles, tags }: BlogPostsProps) {
 
   return (
     <div className="max-w-[800px] mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-8">Blog Posts</h1>
+      <h1 className="text-3xl font-bold mb-8">Posts</h1>
 
       <TagBox tags={tags} />
 
@@ -28,7 +28,7 @@ export default function BlogPosts({ articles, tags }: BlogPostsProps) {
         {filteredArticles.map((article) => (
           <Link
             key={article.id}
-            href={`/blog/${article.id}`}
+            href={`/post/${article.id}`}
             className="block border-b pb-6 hover:bg-gray-50 transition-colors p-4"
           >
             <article>
@@ -54,7 +54,7 @@ export default function BlogPosts({ articles, tags }: BlogPostsProps) {
                         searchParams.toString()
                       );
                       params.set('tag', tag);
-                      window.location.href = `/blog?${params.toString()}`;
+                      window.location.href = `/post?${params.toString()}`;
                     }}
                     className="text-sm text-gray-600 hover:text-blue-600"
                   >

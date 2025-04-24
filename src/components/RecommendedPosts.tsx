@@ -15,7 +15,7 @@ export default function RecommendedPosts({ articles }: RecommendedPostsProps) {
         {articles.map((article) => (
           <Link
             key={article.id}
-            href={`/blog/${article.id}`}
+            href={`/post/${article.id}`}
             className="block hover:bg-gray-50 transition-colors p-2"
           >
             <div className="flex items-center justify-between">

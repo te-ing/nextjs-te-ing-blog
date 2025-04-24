@@ -21,7 +21,7 @@ export default function TagBox({ tags }: TagBoxProps) {
       } else {
         params.delete('tag');
       }
-      router.push(`/blog?${params.toString()}`);
+      router.push(`/post?${params.toString()}`);
     },
     [router, searchParams]
   );

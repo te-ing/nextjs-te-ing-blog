@@ -11,7 +11,7 @@ export default function RecentPosts() {
         {articles.map((article) => (
           <Link
             key={article.id}
-            href={`/blog/${article.id}`}
+            href={`/post/${article.id}`}
             className="block border-b pb-6 hover:bg-gray-50 transition-colors p-4"
           >
             <article>
