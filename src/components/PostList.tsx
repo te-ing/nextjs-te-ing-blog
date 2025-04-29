@@ -33,10 +33,10 @@ export default function PostList({ articles, tags }: PostListProps) {
           >
             <article>
               <div className="flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-gray-900">
+                <h2 className="text-xl font-semibold text-gray-900 truncate ">
                   {article.title}
                 </h2>
-                <div className="text-gray-600 text-sm">
+                <div className="text-gray-600 text-sm whitespace-nowrap">
                   {article.fileDate && (
                     <span className="mr-2">{article.fileDate}</span>
                   )}
