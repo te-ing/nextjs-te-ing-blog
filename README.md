@@ -16,6 +16,7 @@
 - 추천 포스팅 (태그 유사도 + 날짜 기반)
 - 반응형 디자인
 - SEO 최적화 (메타데이터, OpenGraph, Twitter Cards)
+- Giscus 댓글
 
 ## 포스트 작성 방법
 
