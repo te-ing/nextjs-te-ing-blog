@@ -7,6 +7,7 @@ import Layout from '@/components/Layout';
 import MarkdownContent from '@/components/MarkdownContent';
 import RecommendedPosts from '@/components/RecommendedPosts';
 import { Metadata } from 'next';
+import GiscusComments from '@/components/GiscusComments';
 
 export async function generateStaticParams() {
   const paths = getAllArticleIds();
@@ -61,6 +62,7 @@ export default async function ArticlePage({
           </div>
         </header>
         <MarkdownContent content={article.content} tags={article.tags} />
+        <GiscusComments />
         <RecommendedPosts articles={recommendedArticles} />
       </article>
     </Layout>
