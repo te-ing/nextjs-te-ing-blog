@@ -23,7 +23,7 @@ export default function MarkdownContent({
             {tags.map((tag) => (
               <Link
                 key={tag}
-                href={`/blog?tag=${tag}`}
+                href={`/post?tag=${tag}`}
                 className="px-3 py-1 rounded-full text-sm bg-gray-100 text-gray-800 hover:bg-gray-200 transition-colors"
               >
                 #{tag}
