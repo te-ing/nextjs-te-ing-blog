@@ -1,5 +1,5 @@
 ---
-title: 리액트(클라이언트)에서 JWT 토큰 생성하기 with jose
+title: http에서의 안전한 통신을 위한 payload 암호화
 description: HTTP를 사용하는 Node.js, React에서 HTTPS를 모방한 로직을 통해 보안성을 높인 개발과정
 tags: [http]
 ---
