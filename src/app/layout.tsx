@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { GoogleAnalytics } from '@next/third-parties/google';
+import { Analytics } from '@vercel/analytics/next';
 import './globals.css';
 
 const geistSans = Geist({ variable: '--font-geist-sans', subsets: ['latin'] });
@@ -25,6 +26,7 @@ export default function RootLayout({
       >
         {children}
         <GoogleAnalytics gaId={`${process.env.NEXT_PUBLIC_Vercel_GA_ID}`} />
+        <Analytics />
       </body>
     </html>
   );
