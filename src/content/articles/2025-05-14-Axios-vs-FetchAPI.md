@@ -1,7 +1,7 @@
 ---
 title: Axios와 Fetch API, 어떤 것을 선택해야 할까요?
 description: API 요청을 할 때 가장 많이 사용하는 Axios와 Fetch API, 어떤 것을 선택해야 할까요? 어떻게 등장하고 구현되어 있는지, 그리고 각각의 차이점에 대해 소개합니다.
-tags: [fetch, axios, XHR]
+tags: [Fetch, Axios, XHR, Promise]
 ---
 
 API 요청을 개발할 때, 우리는 대부분 Axios 혹은 Fetch API를 사용해서 개발하고 있는데요. 각각 어떻게 등장하고 구현되어 있는지, 그리고 각각의 차이점은 무엇인지 알고 계신가요?
@@ -71,7 +71,7 @@ Axios는 현재 **매우 높은 사용률**을 보이고 있고, 추상화뿐만
 
 ---
 
-출처
+참고
 
 - [https://Axios-http.com/kr/docs/intro](https://Axios-http.com/kr/docs/intro)
 - [https://developer.mozilla.org/ko/docs/Web/API/XMLHttpRequest](https://developer.mozilla.org/ko/docs/Web/API/XMLHttpRequest)
