@@ -27,7 +27,7 @@ export default function TagBox({ tags }: TagBoxProps) {
   );
 
   return (
-    <div className="mb-8">
+    <div className="mb-2">
       <h2 className="text-xl font-semibold mb-4">Tags</h2>
       <div className="relative">
         <div

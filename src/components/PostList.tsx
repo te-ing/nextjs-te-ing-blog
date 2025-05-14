@@ -24,12 +24,12 @@ export default function PostList({ articles, tags }: PostListProps) {
 
       <TagBox tags={tags} />
 
-      <div className="space-y-6">
+      <div>
         {filteredArticles.map((article) => (
           <Link
             key={article.id}
             href={`/post/${article.id}`}
-            className="block border-b pb-6 hover:bg-gray-50 transition-colors p-4"
+            className="block border-b py-6 hover:bg-gray-50 transition-colors p-4"
           >
             <article>
               <div className="flex items-center justify-between">

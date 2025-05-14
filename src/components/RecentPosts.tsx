@@ -6,13 +6,13 @@ export default function RecentPosts() {
 
   return (
     <section className="py-8">
-      <h2 className="text-2xl font-bold mb-6">Recent Posts</h2>
-      <div className="space-y-6">
+      <h2 className="text-2xl font-bold mb-2">Recent Posts</h2>
+      <div>
         {articles.map((article) => (
           <Link
             key={article.id}
             href={`/post/${article.id}`}
-            className="block border-b pb-6 hover:bg-gray-50 transition-colors p-4"
+            className="block border-b py-6 hover:bg-gray-50 transition-colors p-4"
           >
             <article>
               <div className="flex items-center justify-between">
