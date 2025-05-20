@@ -25,7 +25,7 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         {children}
-        <GoogleAnalytics gaId={`${process.env.NEXT_PUBLIC_Vercel_GA_ID}`} />
+        <GoogleAnalytics gaId={process.env.VERCEL_GA_ID!} />
         <Analytics />
       </body>
     </html>
