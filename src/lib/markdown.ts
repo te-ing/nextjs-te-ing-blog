@@ -2,8 +2,11 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { remark } from 'remark';
-import html from 'remark-html';
+import remarkRehype from 'remark-rehype';
+import rehypeHighlight from 'rehype-highlight';
+import rehypeStringify from 'rehype-stringify';
 import { featuredArticles } from '@/config/featured-articles';
+import gfm from 'remark-gfm';
 
 const articlesDirectory = path.join(process.cwd(), 'src/content/articles');
 
@@ -59,7 +62,13 @@ export async function getArticleData(id: string): Promise<Article> {
   const fileContents = fs.readFileSync(fullPath, 'utf8');
 
   const { data, content } = matter(fileContents);
-  const processedContent = await remark().use(html).process(content);
+  const processedContent = await remark()
+    .use(gfm)
+    .use(remarkRehype)
+    .use(rehypeHighlight)
+    .use(rehypeStringify)
+    .process(content);
+
   const contentHtml = processedContent.toString();
   const fileDate = extractDateFromFileName(originalId);
 
