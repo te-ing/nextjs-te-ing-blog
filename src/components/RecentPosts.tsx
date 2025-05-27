@@ -15,7 +15,7 @@ export default function RecentPosts() {
             className="block border-b py-6 hover:bg-gray-50 transition-colors p-4"
           >
             <article>
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
                 <h3 className="text-xl font-semibold text-gray-900">
                   {article.title}
                 </h3>
