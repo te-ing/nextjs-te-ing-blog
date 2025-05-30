@@ -11,9 +11,12 @@ export default function FeaturedArticles() {
         {featuredArticles.map((article) => (
           <Link key={article.id} href={`/post/${article.id}`} className="block">
             <article className="h-full border border-gray-200 rounded-lg p-6 hover:shadow-lg transition-shadow">
-              <h3 className="text-xl font-semibold mb-2">{article.title}</h3>
-              <p className="text-gray-600 mb-4">{article.description}</p>
-              <div className="text-sm text-gray-500">{article.date}</div>
+              <h3 className="text-xl font-semibold mb-3 line-clamp-3 overflow-hidden text-ellipsis">
+                {article.title}
+              </h3>
+              <p className="text-gray-600 line-clamp-3 overflow-hidden text-ellipsis">
+                {article.description}
+              </p>
             </article>
           </Link>
         ))}
