@@ -128,18 +128,12 @@ export function getRecommendedArticles(
   count: number = 4
 ): ArticlePreview[] {
   const allArticles = getAllArticles();
-  console.log(
-    'All articles:',
-    allArticles.map((a) => a.id)
-  );
-  console.log('Current article ID:', currentArticleId);
 
   // URL 디코딩된 ID로 비교
   const decodedCurrentId = desanitizeFileName(currentArticleId);
   const currentArticle = allArticles.find(
     (article) => article.id === decodedCurrentId
   );
-  console.log('Current article:', currentArticle?.id);
 
   if (!currentArticle) {
     console.log('Current article not found');
@@ -149,10 +143,6 @@ export function getRecommendedArticles(
   // 현재 포스트를 제외한 나머지 포스트들
   const otherArticles = allArticles.filter(
     (article) => article.id !== decodedCurrentId
-  );
-  console.log(
-    'Other articles:',
-    otherArticles.map((a) => a.id)
   );
 
   if (otherArticles.length === 0) {
@@ -166,12 +156,6 @@ export function getRecommendedArticles(
     const commonTags =
       currentArticle.tags?.filter((tag) => article.tags?.includes(tag)) || [];
     const tagScore = commonTags.length / (currentArticle.tags?.length || 1);
-    console.log(
-      `Tag score for ${article.id}:`,
-      tagScore,
-      'common tags:',
-      commonTags
-    );
 
     // 날짜 차이 계산 (0~1 사이 값)
     const currentDate = new Date(
@@ -180,11 +164,9 @@ export function getRecommendedArticles(
     const articleDate = new Date(article.fileDate || article.date);
     const dateDiff = Math.abs(currentDate.getTime() - articleDate.getTime());
     const dateScore = 1 / (1 + dateDiff / (1000 * 60 * 60 * 24 * 30)); // 30일 단위로 정규화
-    console.log(`Date score for ${article.id}:`, dateScore);
 
     // 최종 점수 계산 (태그 유사도 70%, 날짜 30% 가중치)
     const finalScore = tagScore * 0.7 + dateScore * 0.3;
-    console.log(`Final score for ${article.id}:`, finalScore);
 
     return {
       article,
@@ -198,9 +180,5 @@ export function getRecommendedArticles(
     .slice(0, count)
     .map(({ article }) => article);
 
-  console.log(
-    'Recommended articles:',
-    recommendedArticles.map((a) => a.id)
-  );
   return recommendedArticles;
 }
