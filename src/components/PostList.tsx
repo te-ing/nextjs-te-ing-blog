@@ -4,7 +4,8 @@ import { ArticlePreview } from '@/lib/markdown';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import TagBox from './TagBox';
-import { useEffect, useLayoutEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
+import { usePostContext } from '@/app/post/postContext';
 
 interface PostListProps {
   articles: ArticlePreview[];
@@ -15,26 +16,16 @@ export default function PostList({ articles, tags }: PostListProps) {
   const searchParams = useSearchParams();
   const selectedTag = searchParams.get('tag');
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
-  const [visibleCount, setVisibleCount] = useState(10);
-  const [saveCountFlag, setSaveCountFlag] = useState(false);
+  const { visibleCount, setVisibleCount } = usePostContext();
 
   const filteredArticles = selectedTag
     ? articles.filter((article) => article.tags?.includes(selectedTag))
     : articles;
 
-  useLayoutEffect(() => {
-    const prevCount = Number(
-      window.sessionStorage.getItem('all_posts_visible_count') || 10
-    );
-    setVisibleCount(prevCount);
-  }, []);
-
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting) {
-          setVisibleCount((prev) => prev + 10);
-        }
+        if (entries[0].isIntersecting) setVisibleCount((prev) => prev + 10);
       },
       { threshold: 1 }
     );
@@ -43,14 +34,6 @@ export default function PostList({ articles, tags }: PostListProps) {
     if (el) observer.observe(el);
 
     return () => {
-      if (saveCountFlag) {
-        window.sessionStorage.setItem(
-          'all_posts_visible_count',
-          String(visibleCount)
-        );
-      } else {
-        window.sessionStorage.removeItem('all_posts_visible_count');
-      }
       if (el) observer.unobserve(el);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,7 +50,6 @@ export default function PostList({ articles, tags }: PostListProps) {
           <Link
             key={article.id}
             href={`/post/${article.id}`}
-            onClick={() => setSaveCountFlag(true)}
             className="block border-b py-6 hover:bg-gray-50 transition-colors p-4"
           >
             <article>
@@ -93,7 +75,6 @@ export default function PostList({ articles, tags }: PostListProps) {
                         searchParams.toString()
                       );
                       params.set('tag', tag);
-                      setSaveCountFlag(true);
                       window.location.href = `/post?${params.toString()}`;
                     }}
                     className="text-sm text-gray-600 hover:text-blue-600"
