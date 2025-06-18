@@ -25,6 +25,7 @@ export async function generateMetadata({
   return {
     title: article.title,
     description: article.description,
+    keywords: article.tags?.join(', '),
     openGraph: {
       title: article.title,
       description: article.description,
