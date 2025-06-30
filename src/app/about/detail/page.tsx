@@ -2,6 +2,8 @@ import Layout from '@/components/Layout';
 import Image from 'next/image';
 import AboutStrengths from '@/components/about/AboutStrengths';
 import AboutMe from '@/components/about/AboutMe';
+import AboutExperience from '@/components/about/AboutExperience';
+import AboutEducation from '@/components/about/AboutEducation';
 
 export default function AboutPage() {
   return (
@@ -29,6 +31,8 @@ export default function AboutPage() {
         </div>
         <div className="space-y-12">
           <AboutStrengths />
+          <AboutExperience />
+          <AboutEducation />
           <AboutMe />
         </div>
       </div>
