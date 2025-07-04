@@ -20,16 +20,17 @@ tags: [CRA, Vite]
 
 그 결과 꽤 극적인 결과가 나타났습니다.
 
+> 기존 CRA의 Webpack을 사용한 빌드시간 \
+> ⌛️ 1 min 35 sec total from scheduled to completion.
 >
-
-- 기존 CRA의 Webpack을 사용한 빌드시간
-  - 1 min 35 sec total from scheduled to completion.
-- Vite 변경 후 빌드시간 (기존 대비 약 67% 빠름) - 31 sec total from scheduled to completion.
-  ⠀
-- 기존 CRA의 Webpack을 사용한 클라우드 서버 빌드시간
-  - 4 min 8 sec total from scheduled to completion.
-- Vite 변경 후 클라우드 서버 빌드시간 (기존 대비 약 57% 빠름)
-  - 1 min 47 sec total from scheduled to completion.
+> Vite 변경 후 빌드시간 (기존 대비 약 67% 빠름) \
+> ⌛️ 31 sec total from scheduled to completion.
+>
+> 기존 CRA의 Webpack을 사용한 클라우드 서버 빌드시간 \
+> ⌛️ 4 min 8 sec total from scheduled to completion.
+>
+> Vite 변경 후 클라우드 서버 빌드시간 (기존 대비 약 57% 빠름) \
+> ⌛️ 1 min 47 sec total from scheduled to completion.
 
 <br />
 
@@ -41,12 +42,11 @@ tags: [CRA, Vite]
 
 때문에 [@vitejs/plugin-legacy](https://github.com/vitejs/vite/tree/main/packages/plugin-legacy) 를 사용하여 오래된 브라우저를 위해 폴리필 해줘야만 하는데요. last 2 versions and not dead, > 0.3% 으로 폴리필 한 결과 다음과 같은 결과가 나타났습니다.
 
+> Vite 구형 브라우저 폴리필 지원 후 빌드시간 (기존 대비 약 24% 빠름) \
+> ⌛️ 1 min 12 sec total from scheduled to completion.
 >
-
-- Vite 구형 브라우저 폴리필 지원 후 빌드시간 (기존 대비 약 24% 빠름)
-  - 1 min 12 sec total from scheduled to completion.
-- Vite 구형 브라우저 폴리필 지원 후 클라우드 서버 빌드시간 (기존 대비 약 79% 느림)
-  - 7 min 24 sec total from scheduled to completion.
+> Vite 구형 브라우저 폴리필 지원 후 클라우드 서버 빌드시간 (기존 대비 약 79% 느림) \
+> ⌛️ 7 min 24 sec total from scheduled to completion.
 
 <br />
 
