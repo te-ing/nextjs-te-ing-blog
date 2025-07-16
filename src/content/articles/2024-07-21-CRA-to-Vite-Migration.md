@@ -9,8 +9,7 @@ tags: [CRA, Vite]
 
 > **왜 Vite를 사용하나요?**
 > Vite는 사전빌드를 거친 후 [Native ESM](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules)을 사용하여 배포하는데, 개발단계에서는 Go로 작성된 Esbuild를 사용해서 Webpack, Parcel과 같은 기존의 번들러 대비 10-100배 빠른 속도를 제공합니다. 다만, 확장성과 안정성을 위해 배포시에는 Rollup을 기반으로한 사전 빌드를 거칩니다.
-> ⠀
-> CommonJS를 통하여 빌드할 뿐만 아니라 필요하지 않은 설정까지 포함된 CRA에 비해 Vite는 더 가볍고 빠르기 때문에 최근 [CRA보다 Vite를 사용하는 추세](https://github.com/reactjs/react.dev/pull/5487)입니다.
+> 오랜 시간동안 다양한 환경을 보장하기 위해 무거워진 것 뿐만 아니라 필요하지 않은 설정까지 포함된 CRA에 비해 Vite는 더 가볍고 빠르기 때문에 최근 [CRA보다 Vite를 사용하는 추세](https://github.com/reactjs/react.dev/pull/5487)입니다.
 
  <br />
 
@@ -52,7 +51,7 @@ tags: [CRA, Vite]
 
 ### 클라우드 서버에서 좋지 않은 결과를 보여주는 이유는?
 
-Native ESM를 사용하는 Vite와는 달리, CRA의 Webpack은 CommonJS를 사용하고 있기 때문에 구형 브라우저에 대한 지원율이 높습니다. 하지만 Vite의 경우 더 많은 폴리필을 지원해야 하기 때문에 같은 커버리지를 지원하면서도 상대적으로 빌드 시간이 더 오래 걸리게 되는 것인데요.
+Native ESM만을 사용하는 Vite와는 달리, CRA의 Webpack은 CommonJS도 지원하고 있기 때문에 구형 브라우저에 대한 지원율이 높습니다. 하지만 Vite의 경우 더 많은 폴리필을 지원해야 하기 때문에 같은 커버리지를 지원하면서도 상대적으로 빌드 시간이 더 오래 걸리게 되는 것인데요.
 
 그럼에도 로컬 빌드 시 조금 더 빠른 성능을 보여주는 이유는 Vite의 배포 빌드 시 사용하는 Rollup은 Rust로 쓰여진 SWC를 파서로 사용하고 있기 때문에([https://github.com/rollup/rollup/pull/5073](https://github.com/rollup/rollup/pull/5073))  성능이 좋은 멀티코어 환경에서는 조금 더 빠른 성능을 보여주지만, 성능이 좋지않은 클라우드 서버 환경에서는 매우 느린 결과를 보여주고 있다고 추측합니다.
 
