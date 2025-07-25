@@ -18,6 +18,7 @@ export interface Article {
   description: string;
   tags: string[];
   fileDate?: string;
+  private?: boolean;
 }
 
 export interface ArticlePreview {
@@ -93,7 +94,6 @@ export function getAllArticles(): ArticlePreview[] {
     const fileContents = fs.readFileSync(fullPath, 'utf8');
     const { data } = matter(fileContents);
     const fileDate = extractDateFromFileName(fileName);
-
     return {
       id,
       fileDate,
@@ -102,11 +102,13 @@ export function getAllArticles(): ArticlePreview[] {
         date: string;
         description: string;
         tags?: string[];
+        private?: boolean;
       }),
     };
   });
-
-  return allArticlesData.sort((a, b) => b.id.localeCompare(a.id));
+  return allArticlesData
+    .filter((data) => !data?.private)
+    .sort((a, b) => b.id.localeCompare(a.id));
 }
 
 export function getFeaturedArticles(): ArticlePreview[] {
