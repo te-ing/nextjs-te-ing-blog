@@ -4,7 +4,7 @@
 
 ## 기술 스택
 
-- Next.js 15.3.1
+- Next.js 16.0.7
 - TypeScript
 - Tailwind CSS
 - Cursor IDE
