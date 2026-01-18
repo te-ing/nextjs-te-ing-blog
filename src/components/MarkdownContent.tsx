@@ -2,20 +2,28 @@ import { markdownStyles } from '@/styles/markdown';
 import Link from 'next/link';
 
 interface MarkdownContentProps {
-  content: string;
+  content: string | React.ReactElement;
   tags?: string[];
+  isMdx?: boolean;
 }
 
 export default function MarkdownContent({
   content,
   tags,
+  isMdx = false,
 }: MarkdownContentProps) {
   return (
     <div>
-      <div
-        className={markdownStyles.content}
-        dangerouslySetInnerHTML={{ __html: processMarkdownContent(content) }}
-      />
+      {isMdx ? (
+        <div className={markdownStyles.content}>{content}</div>
+      ) : (
+        <div
+          className={markdownStyles.content}
+          dangerouslySetInnerHTML={{
+            __html: processMarkdownContent(content as string),
+          }}
+        />
+      )}
       {tags && tags.length > 0 && (
         <div className="mt-8 pt-4 border-t">
           <h3 className="text-lg font-semibold mb-2">Tags</h3>

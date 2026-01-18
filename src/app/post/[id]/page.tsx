@@ -62,7 +62,7 @@ export default async function ArticlePage({
             {article.date}
           </div>
         </header>
-        <MarkdownContent content={article.content} tags={article.tags} />
+        <MarkdownContent content={article.content} tags={article.tags} isMdx={article.isMdx} />
         <GiscusComments />
         <RecommendedPosts articles={recommendedArticles} />
       </article>

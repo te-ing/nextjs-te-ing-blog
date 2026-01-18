@@ -7,18 +7,86 @@ import rehypeHighlight from 'rehype-highlight';
 import rehypeStringify from 'rehype-stringify';
 import { featuredArticles } from '@/config/featured-articles';
 import gfm from 'remark-gfm';
+import { compileMDX } from 'next-mdx-remote/rsc';
+import { mdxComponents } from '@/components/mdx/mdx-components';
 
 const articlesDirectory = path.join(process.cwd(), 'src/content/articles');
+
+interface ArticleFile {
+  id: string;
+  fullPath: string;
+  isMdx: boolean;
+  isFolder: boolean;
+}
+
+function getArticleFiles(): ArticleFile[] {
+  const entries = fs.readdirSync(articlesDirectory, { withFileTypes: true });
+  const articles: ArticleFile[] = [];
+
+  for (const entry of entries) {
+    if (entry.isDirectory()) {
+      // 폴더 기반 아티클 (index.mdx 또는 index.md)
+      const folderPath = path.join(articlesDirectory, entry.name);
+      const mdxPath = path.join(folderPath, 'index.mdx');
+      const mdPath = path.join(folderPath, 'index.md');
+
+      if (fs.existsSync(mdxPath)) {
+        articles.push({
+          id: entry.name,
+          fullPath: mdxPath,
+          isMdx: true,
+          isFolder: true,
+        });
+      } else if (fs.existsSync(mdPath)) {
+        articles.push({
+          id: entry.name,
+          fullPath: mdPath,
+          isMdx: false,
+          isFolder: true,
+        });
+      }
+    } else if (/\.mdx?$/.test(entry.name)) {
+      // 단일 파일 아티클
+      const id = entry.name.replace(/\.mdx?$/, '');
+      const isMdx = entry.name.endsWith('.mdx');
+      articles.push({
+        id,
+        fullPath: path.join(articlesDirectory, entry.name),
+        isMdx,
+        isFolder: false,
+      });
+    }
+  }
+
+  return articles;
+}
+
+async function getArticleComponents(articleId: string): Promise<Record<string, React.ComponentType<unknown>>> {
+  const folderPath = path.join(articlesDirectory, articleId);
+  const componentsPath = path.join(folderPath, 'components.tsx');
+
+  if (fs.existsSync(componentsPath)) {
+    try {
+      // 동적으로 컴포넌트 import
+      const components = await import(`@/content/articles/${articleId}/components`);
+      return components;
+    } catch {
+      return {};
+    }
+  }
+  return {};
+}
 
 export interface Article {
   id: string;
   title: string;
   date: string;
-  content: string;
+  content: string | React.ReactElement;
   description: string;
   tags: string[];
   fileDate?: string;
   private?: boolean;
+  isMdx?: boolean;
 }
 
 export interface ArticlePreview {
@@ -31,10 +99,36 @@ export interface ArticlePreview {
 }
 
 function sanitizeFileName(fileName: string): string {
-  // 파일 확장자 제거
-  const nameWithoutExt = fileName.replace(/\.md$/, '');
   // 한글과 특수문자를 URL에 안전한 형태로 변환
-  return encodeURIComponent(nameWithoutExt);
+  return encodeURIComponent(fileName);
+}
+
+function findArticleFile(baseName: string): { fullPath: string; isMdx: boolean; isFolder: boolean } | null {
+  // 1. 폴더 기반 구조 확인
+  const folderPath = path.join(articlesDirectory, baseName);
+  if (fs.existsSync(folderPath) && fs.statSync(folderPath).isDirectory()) {
+    const mdxPath = path.join(folderPath, 'index.mdx');
+    const mdPath = path.join(folderPath, 'index.md');
+
+    if (fs.existsSync(mdxPath)) {
+      return { fullPath: mdxPath, isMdx: true, isFolder: true };
+    }
+    if (fs.existsSync(mdPath)) {
+      return { fullPath: mdPath, isMdx: false, isFolder: true };
+    }
+  }
+
+  // 2. 단일 파일 구조 확인
+  const mdxPath = path.join(articlesDirectory, `${baseName}.mdx`);
+  const mdPath = path.join(articlesDirectory, `${baseName}.md`);
+
+  if (fs.existsSync(mdxPath)) {
+    return { fullPath: mdxPath, isMdx: true, isFolder: false };
+  }
+  if (fs.existsSync(mdPath)) {
+    return { fullPath: mdPath, isMdx: false, isFolder: false };
+  }
+  return null;
 }
 
 function desanitizeFileName(sanitizedId: string): string {
@@ -51,18 +145,55 @@ function extractDateFromFileName(fileName: string): string {
 }
 
 export function getAllArticleIds() {
-  const fileNames = fs.readdirSync(articlesDirectory);
-  return fileNames.map((fileName) => {
-    return { params: { id: sanitizeFileName(fileName) } };
+  const articles = getArticleFiles();
+  return articles.map((article) => {
+    return { params: { id: sanitizeFileName(article.id) } };
   });
 }
 
 export async function getArticleData(id: string): Promise<Article> {
   const originalId = desanitizeFileName(id);
-  const fullPath = path.join(articlesDirectory, `${originalId}.md`);
-  const fileContents = fs.readFileSync(fullPath, 'utf8');
+  const fileInfo = findArticleFile(originalId);
 
+  if (!fileInfo) {
+    throw new Error(`Article not found: ${originalId}`);
+  }
+
+  const { fullPath, isMdx, isFolder } = fileInfo;
+  const fileContents = fs.readFileSync(fullPath, 'utf8');
   const { data, content } = matter(fileContents);
+  const fileDate = extractDateFromFileName(originalId);
+
+  if (isMdx) {
+    // 폴더 기반이면 로컬 컴포넌트 로드
+    const localComponents = isFolder ? await getArticleComponents(originalId) : {};
+    const allComponents = { ...mdxComponents, ...localComponents };
+
+    const { content: mdxContent } = await compileMDX({
+      source: content,
+      components: allComponents,
+      options: {
+        mdxOptions: {
+          remarkPlugins: [gfm],
+          rehypePlugins: [rehypeHighlight],
+        },
+      },
+    });
+
+    return {
+      id,
+      content: mdxContent,
+      fileDate,
+      isMdx: true,
+      ...(data as {
+        title: string;
+        date: string;
+        description: string;
+        tags: string[];
+      }),
+    };
+  }
+
   const processedContent = await remark()
     .use(gfm)
     .use(remarkRehype)
@@ -71,12 +202,12 @@ export async function getArticleData(id: string): Promise<Article> {
     .process(content);
 
   const contentHtml = processedContent.toString();
-  const fileDate = extractDateFromFileName(originalId);
 
   return {
     id,
     content: contentHtml,
     fileDate,
+    isMdx: false,
     ...(data as {
       title: string;
       date: string;
@@ -87,15 +218,13 @@ export async function getArticleData(id: string): Promise<Article> {
 }
 
 export function getAllArticles(): ArticlePreview[] {
-  const fileNames = fs.readdirSync(articlesDirectory);
-  const allArticlesData = fileNames.map((fileName) => {
-    const id = fileName.replace(/\.md$/, '');
-    const fullPath = path.join(articlesDirectory, fileName);
-    const fileContents = fs.readFileSync(fullPath, 'utf8');
+  const articles = getArticleFiles();
+  const allArticlesData = articles.map((article) => {
+    const fileContents = fs.readFileSync(article.fullPath, 'utf8');
     const { data } = matter(fileContents);
-    const fileDate = extractDateFromFileName(fileName);
+    const fileDate = extractDateFromFileName(article.id);
     return {
-      id,
+      id: article.id,
       fileDate,
       ...(data as {
         title: string;
