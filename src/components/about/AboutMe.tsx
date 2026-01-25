@@ -8,7 +8,7 @@ const AboutMe = () => (
       {ABOUT_ME.map(({ title, content }, index) => (
         <div key={index}>
           <h3 className="text-lg font-bold">{title}</h3>
-          <p className="text-base text-gray-700">{content}</p>
+          <p className="text-base text-gray-700 whitespace-pre-line">{content}</p>
         </div>
       ))}
     </div>
