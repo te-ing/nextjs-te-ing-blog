@@ -45,7 +45,7 @@ Claude의 마스터 프롬프트는 이럴땐 어떻게 하고, 저럴땐 어떻
 
 ## Key Tools in Claude Code (Claude Code의 핵심 도구들)
 
-![HowClaudeCodeWorks13:42](13:42)
+![HowClaudeCodeWorks13:42](/images/HowClaudeCodeWorks13:42.png)
 오늘날 Claude Code에 있는 핵심 도구들이에요. 며칠마다 새 릴리스를 하면서 자주 바뀌고 있지만, 이 영상에서는 Read, Grep/Glob, Edit, Bash, WebSearch/WebFGetch, TodoRead/TodoWrite, Task를 다룹니다.
 
 RAG 대신 **Grep**을 사용하는 방식은 사용자가 터미널에서 문제를 해결할 때 시도하는 방식을 모방합니다.
@@ -64,7 +64,7 @@ Bash가 여기서의 핵심인데요. **모든 도구를 Bash로 대신해도 �
 
 ### To-dos
 
-![HowClaudeCodeWorks20:25](20:25)
+![HowClaudeCodeWorks20:25](/images/HowClaudeCodeWorks20:25.png)
 
 To-dos는 모델을 궤도에 유지하고 Tasks는 컨텍스트를 어지럽히지 않으면서 긴 프로세스를 실행하는 방법이에요. 조심해야 하는 건, 컨텍스트가 가득차면 모델이 멍청해진다는 것이에요
 
