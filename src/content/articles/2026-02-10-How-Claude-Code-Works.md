@@ -1,11 +1,11 @@
 ---
 title: 클로드는 어떻게 동작하는가(How Claude Code Works)
-description: Jared Zoneraich(PromptLayer CEO)가 Claude Code의 아키텍처를 해부하며, 어떻게 동작하는지를 발표한 유튜브 영상을 정리하였습니다.
+description: Jared Zoneraich(PromptLayer CEO)가 Claude Code의 아키텍처를 해부하며, 어떻게 동작하는지를 발표한 영상을 정리하였습니다.
 tags: [AI, Claude, RAG]
 private: false
 ---
 
-> 본 포스팅은 AI Engineer 채널의 [How Claude Code Works - Jared Zoneraich, PromptLayer](https://youtu.be/RFKCzGlAU6Q?si=w0L2qWPnJv7Fv7hB) 유튜브 영상을 바탕으로 의역하여 정리한 글입니다. 본 영상은 Anthropic과의 제휴관계가 없으며 Anthropic을 대변하지 않습니다. AI 엔지니어링 회사의 CEO 이자 Claude의 열렬한 사용자가 자신의 의견을 발표하는 것입니다.
+> 본 포스팅은 AI Engineer 채널의 [How Claude Code Works - Jared Zoneraich, PromptLayer](https://youtu.be/RFKCzGlAU6Q?si=w0L2qWPnJv7Fv7hB) 영상을 바탕으로 의역하여 정리한 글입니다. 본 영상은 Anthropic과의 제휴관계가 없으며 Anthropic을 대변하지 않습니다. AI 엔지니어링 회사의 CEO 이자 Claude의 열렬한 사용자가 자신의 의견을 발표하는 것입니다.
 
 ## Core Philosophy: Simple Architecture & Better Models (핵심 철학: 단순한 아키텍처 & 더 나은 모델)
 
@@ -13,7 +13,7 @@ private: false
 
 **"오늘날 모델의 결함을 과도하게 엔지니어링 하려 하지 마세요. 더 많은 것들이 그냥 나아질 것이고 그 작업들은 시간낭비가 될 것입니다."**
 
-Claude Code는 RAG를 포함한 모든 것들을 긁어내고 “그냥 더 나은 모델을 만들고 맡기자” 라는 철학을 갖고 있다고 생각합니다. 아직 Cursors는 RAG를 가져와서 답변에 합치고 있긴 하지만요. 도구 호출을 사용하고 도구 호출을 단순화하는 것. 이것이 Claude의 가장 중요한 점입니다.
+Claude Code는 RAG를 포함한 모든 것들을 긁어내고 “그냥 더 나은 모델을 만들고 맡기자” 라는 철학을 갖고 있다고 생각합니다. 아직 Cursor는 RAG를 가져와서 답변에 합치고 있긴 하지만요. 도구 호출을 사용하고 도구 호출을 단순화하는 것. 이것이 Claude의 가장 중요한 점입니다.
 
 Claude의 마스터 프롬프트는 이럴땐 어떻게 하고, 저럴땐 어떻게 하고 ... 같은 복잡한 워크플로우 대신, 정말 몇 개의 단순한 도구 호출만 있어요. RAG 대신 grep을 포함해서요. 네, 그리고 그게 훈련된 내용이에요. 매우 최적화된 도구 호출 모델들이에요.
 
@@ -46,7 +46,7 @@ Claude의 마스터 프롬프트는 이럴땐 어떻게 하고, 저럴땐 어떻
 ## Key Tools in Claude Code (Claude Code의 핵심 도구들)
 
 ![HowClaudeCodeWorks13:42](/images/HowClaudeCodeWorks13:42.png)
-오늘날 Claude Code에 있는 핵심 도구들이에요. 며칠마다 새 릴리스를 하면서 자주 바뀌고 있지만, 이 영상에서는 Read, Grep/Glob, Edit, Bash, WebSearch/WebFGetch, TodoRead/TodoWrite, Task를 다룹니다.
+오늘날 Claude Code에 있는 핵심 도구들이에요. 며칠마다 새 릴리스를 하면서 자주 바뀌고 있지만, 이 영상에서는 Read, Grep/Glob, Edit, Bash, WebSearch/WebFetch, TodoRead/TodoWrite, Task를 다룹니다.
 
 RAG 대신 **Grep**을 사용하는 방식은 사용자가 터미널에서 문제를 해결할 때 시도하는 방식을 모방합니다.
 
@@ -56,7 +56,7 @@ RAG 대신 **Grep**을 사용하는 방식은 사용자가 터미널에서 문�
 
 ### The Power of Bash (Bash의 힘)
 
-Bash가 여기서의 핵심인데요. **모든 도구를 Bash로 대신해도 될 것 같습니다.** Claude Code에서 가끔 파이썬 파일을 만들고 실행한 뒤 삭제하곤 하는데요. 이것이 바로 Bash가 우아하게 동작하는 방식이죠.
+Bash가 여기서의 핵심인데요. **모든 도구를 Bash로 대신해도 될 것 같습니다.** Claude Code가 가끔 파이썬 파일을 만들고 실행한 뒤 삭제하곤 하는데요. 이것이 바로 Bash가 우아하게 동작하는 방식이죠.
 
 코딩 에이전트에서 Bash의 놀라운 점이 두 가지 있어요. 첫째, 단순하고 모든 걸 해요. 매우 견고하죠. 둘째, 훈련 데이터가 엄청 많아요. 우리가 그걸 쓰니까요. 모델이 Rust나 덜 흔한 프로그래밍 언어를 잘 못하는 이유가 그거예요. 사용하는 사람이 적으니까요.
 
@@ -90,7 +90,7 @@ _"이 사용자가 환불을 원하면 이 프롬프트로 라우팅 해"_ Promp
 
 **모델을 믿으세요**. 의심스러울 때, 모든 엣지 케이스와 if 문을 고려하려 하지 마세요. 모델이 탐색하고 알아내도록 맡기세요. 대시보드에서 브라우저 에이전트 실험을 했는데, 버튼에 제목을 추가하면 에이전트가 자동으로 탐색하는 데 도움이 될지 봤어요. 놀랍게도 더 나빠졌어요. "이 버튼을 클릭해야 하고, 그다음 이 버튼"이라고 했더니 산만해져서 뭘 해야 할지 몰랐어요. 탐색에 의존하는 게 나아요.
 
-Claude는 트리거 구문으로도 똑똑한 걸 해요. "think," "think hard," "think harder," 그리고 제일 좋아하는 "ultra think". 추론 토큰 예산을 또 다른 매개변수로 사용할 수 있어요. 어려운 계획 수립을 위한 도구 호출을 만들 수도 있고 아니면 사용자가 지정해서 즉석에서 바꿀 수도 있고요.
+Claude Code는 트리거 구문으로도 똑똑한 걸 해요. "think," "think hard," "think harder," 그리고 제일 좋아하는 "ultra think". 추론 토큰 예산을 또 다른 매개변수로 사용할 수 있어요. 어려운 계획 수립을 위한 도구 호출을 만들 수도 있고 아니면 사용자가 지정해서 즉석에서 바꿀 수도 있고요.
 
 ## Sandboxing & Permissions (샌드박싱 & 권한)
 
@@ -123,6 +123,6 @@ Claude Code 시스템 프롬프트의 유출이 조금 있었는데, 이 영상�
 
 Skills는 훌륭해요. 좀 더 새로운 기능이에요. 최근에야 납득했어요. 이 슬라이드를 Skills로 만들었어요. **확장 가능한 시스템 프롬프트**라고 생각하세요. 컨텍스트를 어지럽히고 싶지 않지만, 더 많은 컨텍스트가 필요한 다양한 작업이 있어요. 예를 들면, 문서 스킬, Microsoft Word/Excel 편집, 디자인 스타일 가이드, 딥 리서치 같은 것이 있습니다. 딥 리서치 GitHub 레포를 넣고 "Claude Code 스킬로 다시 만들어"라고 했더니 정말 잘 동작하기도 했습니다.
 
-스킬에 대한 한가지 사용 사례가 있었어요. 4만 자 이상으로 길어진 Claude.md를 스킬로 분리했는데, Claude가 분리한 스킬들을 모두 무시했다는겁니다. 스킬은 각각의 설명을 가질 수 있습니다. 그래서 이론적으로 완벽한 세상에서는 항상 상황에 맞춰 스킬을 선택할 거예요. 하지만 현재는, 저도 보통 스킬을 수동으로 직접 호출하고 있습니다.
+스킬에 대한 한가지 사용 사례가 있었어요. 4만 자 이상으로 길어진 Claude.md를 스킬로 분리했는데, Claude가 분리한 스킬들을 모두 무시했다는 겁니다. 스킬은 각각의 설명을 가질 수 있습니다. 그래서 이론적으로 완벽한 세상에서는 항상 상황에 맞춰 스킬을 선택할 거예요. 하지만 현재는, 저도 보통 스킬을 수동으로 직접 호출하고 있습니다.
 
 하지만 이게 좋은 연결 고리라고 생각해요. 프롬프팅이 올바른 해결책인 때가 언제이고, DAG가 올바른 해결책인 때가 언제인지, 아니면 그냥 모델 훈련 문제일 수도 있어요. 앞으로 훈련에서 모델이 도구 호출처럼 스킬을 좀 더 호출하도록 해야 할 수도 있어요. 아직 그렇게 좋지 않은 기능일 수 있지만, 패러다임은 매우 흥미롭다고 생각해요. 하지만 배우고 있듯이 완벽하지는 않아요.
