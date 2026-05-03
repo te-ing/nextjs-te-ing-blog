@@ -61,15 +61,17 @@ function getArticleFiles(): ArticleFile[] {
   return articles;
 }
 
+const dynamicImport = new Function('p', 'return import(p)') as (
+  p: string
+) => Promise<Record<string, React.ComponentType<unknown>>>;
+
 async function getArticleComponents(articleId: string): Promise<Record<string, React.ComponentType<unknown>>> {
   const folderPath = path.join(articlesDirectory, articleId);
   const componentsPath = path.join(folderPath, 'components.tsx');
 
   if (fs.existsSync(componentsPath)) {
     try {
-      // 동적으로 컴포넌트 import
-      const components = await import(`@/content/articles/${articleId}/components`);
-      return components;
+      return await dynamicImport(componentsPath);
     } catch {
       return {};
     }
