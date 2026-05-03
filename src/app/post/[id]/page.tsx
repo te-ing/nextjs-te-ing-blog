@@ -8,6 +8,7 @@ import MarkdownContent from '@/components/MarkdownContent';
 import RecommendedPosts from '@/components/RecommendedPosts';
 import { Metadata } from 'next';
 import GiscusComments from '@/components/GiscusComments';
+import { SITE_URL } from '@/config/site';
 
 export async function generateStaticParams() {
   const paths = getAllArticleIds();
@@ -36,7 +37,7 @@ export async function generateMetadata({
       siteName: 'Write-ing Code',
     },
     alternates: {
-      canonical: `https://te-ing.dev/post/${id}`,
+      canonical: `${SITE_URL}/post/${id}`,
     },
     robots: article.private
       ? { index: false, follow: false }
@@ -63,16 +64,16 @@ export default async function ArticlePage({
     author: {
       '@type': 'Person',
       name: '김태중',
-      url: 'https://te-ing.dev/about',
+      url: `${SITE_URL}/about`,
     },
     publisher: {
       '@type': 'Person',
       name: '김태중',
-      url: 'https://te-ing.dev',
+      url: SITE_URL,
     },
     mainEntityOfPage: {
       '@type': 'WebPage',
-      '@id': `https://te-ing.dev/post/${id}`,
+      '@id': `${SITE_URL}/post/${id}`,
     },
     keywords: article.tags?.join(', '),
     inLanguage: 'ko-KR',

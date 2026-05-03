@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { Analytics } from '@vercel/analytics/next';
+import { SITE_URL } from '@/config/site';
 import './globals.css';
 import 'highlight.js/styles/atom-one-dark.css';
 
@@ -12,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://te-ing.dev'),
+  metadataBase: new URL(SITE_URL),
   title: {
     template: '%s | Write-ing Code',
     default: 'Write-ing Code',

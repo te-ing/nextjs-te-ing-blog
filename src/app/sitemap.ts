@@ -1,5 +1,6 @@
 import type { MetadataRoute } from 'next';
 import { getAllArticles } from '@/lib/markdown';
+import { SITE_URL } from '@/config/site';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const articles = getAllArticles();
@@ -10,24 +11,24 @@ export default function sitemap(): MetadataRoute.Sitemap {
   }, new Date(0));
 
   const postUrls = articles.map((article) => ({
-    url: `https://te-ing.dev/post/${article.id}`,
+    url: `${SITE_URL}/post/${article.id}`,
     lastModified: new Date(article.date ?? article.fileDate),
     priority: 0.9,
   }));
 
   return [
     {
-      url: 'https://te-ing.dev',
+      url: SITE_URL,
       lastModified: latestArticleDate,
       priority: 1,
     },
     {
-      url: 'https://te-ing.dev/post',
+      url: `${SITE_URL}/post`,
       lastModified: latestArticleDate,
       priority: 0.8,
     },
     {
-      url: 'https://te-ing.dev/about',
+      url: `${SITE_URL}/about`,
       priority: 0.5,
     },
     ...postUrls,

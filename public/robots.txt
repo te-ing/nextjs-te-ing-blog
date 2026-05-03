@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://te-ing.dev/sitemap.xml 
+Sitemap: https://www.te-ing.dev/sitemap.xml
