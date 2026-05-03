@@ -2,6 +2,15 @@ import Layout from '@/components/Layout';
 import Image from 'next/image';
 import AboutStrengths from '@/components/about/AboutStrengths';
 import AboutMe from '@/components/about/AboutMe';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '소개',
+  description: '프론트엔드 개발자 김태중',
+  alternates: {
+    canonical: '/about',
+  },
+};
 
 export default function AboutPage() {
   return (

@@ -12,11 +12,15 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://te-ing.dev'),
   title: {
     template: '%s | Write-ing Code',
     default: 'Write-ing Code',
   },
   description: '쉽게 읽을 수 있는 글과 코드를 씁니다.',
+  alternates: {
+    canonical: '/',
+  },
 };
 
 export default function RootLayout({

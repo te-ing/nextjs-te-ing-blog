@@ -2,6 +2,15 @@ import { getAllArticles, getAllTags } from '@/lib/markdown';
 import Layout from '@/components/Layout';
 import PostList from '@/components/PostList';
 import { Suspense } from 'react';
+import type { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: '전체 글',
+  description: '개발 및 회고를 정리합니다.',
+  alternates: {
+    canonical: '/post',
+  },
+};
 
 function LoadingFallback() {
   return (
