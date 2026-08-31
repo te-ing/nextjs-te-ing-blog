@@ -3,6 +3,7 @@ title: Virtual DOM이 무조건 빠른 것은 아닙니다.
 description: 리액트는 Virtual DOM을 사용하기 때문에 빠르다 라는 말은 맞기도 하지만 틀리기도 합니다. 리액트는 왜 Virtual DOM을 사용하고, 스벨트나 SolidJS는 왜 Virtual DOM을 사용하지 않는가에 대해 작성하였습니다.
 slug: virtualDOM
 tags: [virtualDOM, 가상돔, 리액트]
+category: 톺아보기
 ---
 
 ## 리액트의 Virtual DOM 은 무엇인가요?

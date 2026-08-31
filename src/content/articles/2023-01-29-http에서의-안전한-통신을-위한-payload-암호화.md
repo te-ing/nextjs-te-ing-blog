@@ -2,6 +2,7 @@
 title: http에서의 안전한 통신을 위한 payload 암호화
 description: HTTP를 사용하는 Node.js, React에서 HTTPS를 모방한 로직을 통해 보안성을 높인 개발과정
 tags: [http]
+category: 구현/설계
 ---
 
 > 💡 현재 개발중인 블로그 페이지에서 회원가입 기능을 넣으려 하는데, 아직 HTTPS를 사용하지 않아 payload에서 중요정보들이 그대로 노출될 수 밖에 없었다.

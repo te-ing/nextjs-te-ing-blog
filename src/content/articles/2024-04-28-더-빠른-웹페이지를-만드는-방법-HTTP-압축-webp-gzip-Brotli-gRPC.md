@@ -2,6 +2,7 @@
 title: 더 빠른 웹페이지를 만드는 방법::HTTP 압축 - webp, gzip, Brotli, gRPC
 description: 최적화를 덮어놓고 개발을 하다보면 위에서 말한 임계치가 넘어서곤 하는데, 이때 웹페이지를 더 빠르게 할 수 있는 방법을 공유하려 한다. 어떻게하면 더 빠르게 만들 수 있을까?
 tags: [HTTP, grpc, gzip, brotli, protobuf, webp]
+category: 톺아보기
 ---
 
 좋은 사용자경험을 위해서는 가장 큰 요소(LCP)가 2.5초 이내 혹은, 의미있는 콘텐츠(FMP)가 1.8초 이내에 일어날 수 있도록 권장하고 있다.

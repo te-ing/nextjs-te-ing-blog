@@ -2,6 +2,7 @@
 title: 전역상태를 사용하지 않고 props drilling을 없애보자::Observer Component
 description: 섬세한 ISFP의 코드 가독성 개선 경험 을 보고 구현해본 Observer Component
 tags: [bubbling, HOC, Observer]
+category: 구현/설계
 ---
 
 > [섬세한 ISFP의 코드 가독성 개선 경험](https://if.kakao.com/2022/session/80)에서 가독성 향상을 위해 사용한 ObserverComponent을 통해 전역상태관리 라이브러리 의존 낮추기

@@ -2,6 +2,7 @@
 title: '하나뿐인 http 개발서버, Cloudflare Tunnel로 병목 해결하기'
 description: '단일 사내 개발 서버로 인한 배포 충돌과 HTTP-only 환경의 검수 차단 문제를 해소하기 위해, Docker와 Cloudflare Tunnel을 조합한 1인용 임시 HTTPS 배포 스크립트를 직접 만든 과정을 공유합니다.'
 tags: [Docker, Cloudflare, Nginx, DX]
+category: 구현/설계
 private: false
 ---
 

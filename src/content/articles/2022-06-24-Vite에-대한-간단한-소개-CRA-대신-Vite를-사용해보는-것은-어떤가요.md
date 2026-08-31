@@ -2,6 +2,7 @@
 title: Vite에 대한 간단한 소개::CRA 대신 Vite를 사용해보는 것은 어떤가요?
 description: 기존 번들러보다 10배에서 100배까지 빠른 Vite의 배경과 장단점을 소개합니다.
 tags: [번들러, CRA, Vite]
+category: 톺아보기
 ---
 
 ## Vite 개요

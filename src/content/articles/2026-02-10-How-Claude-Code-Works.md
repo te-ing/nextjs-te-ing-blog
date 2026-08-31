@@ -2,6 +2,7 @@
 title: 클로드는 어떻게 동작하는가(How Claude Code Works)
 description: Jared Zoneraich(PromptLayer CEO)가 Claude Code의 아키텍처를 해부하며, 어떻게 동작하는지를 발표한 영상을 정리하였습니다.
 tags: [AI, Claude, RAG]
+category: 톺아보기
 private: false
 ---
 

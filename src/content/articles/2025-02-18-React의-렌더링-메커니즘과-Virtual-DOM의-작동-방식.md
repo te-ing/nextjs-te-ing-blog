@@ -3,6 +3,7 @@ title: React의 Virtual DOM 작동 방식과 주의할 점
 description: React의 공식문서에 기반하여 리액트의 Virtual DOM 의 작동 방식과 유의사항을 정리하였습니다.
 slug: virtualDOM
 tags: [virtual DOM, 가상돔, 리액트]
+category: 톺아보기
 ---
 
 ### Virtual DOM의 비교(diffing) 알고리즘

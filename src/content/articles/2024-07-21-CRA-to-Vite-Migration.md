@@ -3,6 +3,7 @@ title: 빌드시간 개선을 위한 CRA to Vite Migration
 description: CRA → Vite Migration 빌드시간과 함께 Vite보다 CRA가 더 빠를 수 있는 상황에 대해 공유합니다.
 slug: cra-to-vite-migration
 tags: [CRA, Vite]
+category: 트러블슈팅
 ---
 
 현재 CRA를 기반으로 만들어진 패키지로 웹뷰 서비스를 배포하고 있는데요. 기존까지는 큰 문제가 없었지만, 클라우드 서버 내에서 빌드를 하게 되면서 빌드시간이 2~3배 증가하는 문제가 생겼습니다. 때문에 빌드시간 단축을 위해 CRA의 Webpack v5에서 Vite 로 Migration을 시도했는데요. CRA에서 Vite로 변경했을 때의 빌드시간과 함께 이때 발생한 문제점에 대해 공유드리려 합니다.
