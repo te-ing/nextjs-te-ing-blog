@@ -4,23 +4,34 @@ import { ArticlePreview } from '@/lib/markdown';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import TagBox from './TagBox';
+import CategoryBox from './CategoryBox';
+import { resolveCategory, type CategoryCount } from '@/lib/categories';
 import { useEffect, useRef } from 'react';
 import { usePostContext } from '@/app/post/postContext';
 
 interface PostListProps {
   articles: ArticlePreview[];
   tags: string[];
+  categories: CategoryCount[];
 }
 
-export default function PostList({ articles, tags }: PostListProps) {
+export default function PostList({
+  articles,
+  tags,
+  categories,
+}: PostListProps) {
   const searchParams = useSearchParams();
   const selectedTag = searchParams.get('tag');
+  const selectedCategory = searchParams.get('category');
   const loadMoreRef = useRef<HTMLDivElement | null>(null);
   const { visibleCount, setVisibleCount } = usePostContext();
 
-  const filteredArticles = selectedTag
-    ? articles.filter((article) => article.tags?.includes(selectedTag))
-    : articles;
+  const filteredArticles = articles.filter((article) => {
+    if (selectedTag && !article.tags?.includes(selectedTag)) return false;
+    if (selectedCategory && resolveCategory(article.category) !== selectedCategory)
+      return false;
+    return true;
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -42,6 +53,8 @@ export default function PostList({ articles, tags }: PostListProps) {
   return (
     <div className="max-w-[800px] mx-auto py-8 px-4">
       <h1 className="text-3xl font-bold mb-8">Posts</h1>
+
+      <CategoryBox categories={categories} totalCount={articles.length} />
 
       <TagBox tags={tags} />
 
@@ -86,7 +99,7 @@ export default function PostList({ articles, tags }: PostListProps) {
             </article>
           </Link>
         ))}
-        {visibleCount < articles.length && (
+        {visibleCount < filteredArticles.length && (
           <div ref={loadMoreRef} className="h-10"></div>
         )}
       </div>

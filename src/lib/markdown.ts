@@ -9,6 +9,11 @@ import { featuredArticles } from '@/config/featured-articles';
 import gfm from 'remark-gfm';
 import { compileMDX } from 'next-mdx-remote/rsc';
 import { mdxComponents } from '@/components/mdx/mdx-components';
+import {
+  CategoryCount,
+  resolveCategory,
+  sortCategories,
+} from '@/lib/categories';
 
 const articlesDirectory = path.join(process.cwd(), 'src/content/articles');
 
@@ -86,6 +91,7 @@ export interface Article {
   content: string | React.ReactElement;
   description: string;
   tags: string[];
+  category?: string;
   fileDate?: string;
   private?: boolean;
   isMdx?: boolean;
@@ -97,6 +103,7 @@ export interface ArticlePreview {
   date: string;
   description: string;
   tags?: string[];
+  category?: string;
   fileDate?: string;
 }
 
@@ -192,6 +199,7 @@ export async function getArticleData(id: string): Promise<Article> {
         date: string;
         description: string;
         tags: string[];
+        category?: string;
       }),
     };
   }
@@ -215,6 +223,7 @@ export async function getArticleData(id: string): Promise<Article> {
       date: string;
       description: string;
       tags: string[];
+      category?: string;
     }),
   };
 }
@@ -233,6 +242,7 @@ export function getAllArticles(): ArticlePreview[] {
         date: string;
         description: string;
         tags?: string[];
+        category?: string;
         private?: boolean;
       }),
     };
@@ -254,6 +264,21 @@ export function getAllTags(): string[] {
     article.tags?.forEach((tag) => tags.add(tag));
   });
   return Array.from(tags).sort();
+}
+
+export function getCategoryCounts(): CategoryCount[] {
+  const articles = getAllArticles();
+  const counts = new Map<string, number>();
+
+  articles.forEach((article) => {
+    const category = resolveCategory(article.category);
+    counts.set(category, (counts.get(category) ?? 0) + 1);
+  });
+
+  return sortCategories(counts).map((name) => ({
+    name,
+    count: counts.get(name) ?? 0,
+  }));
 }
 
 export function getRecommendedArticles(

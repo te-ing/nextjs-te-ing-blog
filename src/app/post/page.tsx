@@ -1,4 +1,4 @@
-import { getAllArticles, getAllTags } from '@/lib/markdown';
+import { getAllArticles, getAllTags, getCategoryCounts } from '@/lib/markdown';
 import Layout from '@/components/Layout';
 import PostList from '@/components/PostList';
 import { Suspense } from 'react';
@@ -37,11 +37,12 @@ function LoadingFallback() {
 export default function PostPage() {
   const articles = getAllArticles();
   const tags = getAllTags();
+  const categories = getCategoryCounts();
 
   return (
     <Layout>
       <Suspense fallback={<LoadingFallback />}>
-        <PostList articles={articles} tags={tags} />
+        <PostList articles={articles} tags={tags} categories={categories} />
       </Suspense>
     </Layout>
   );
