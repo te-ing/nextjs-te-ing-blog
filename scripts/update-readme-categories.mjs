@@ -6,8 +6,12 @@ const ROOT = path.resolve(import.meta.dirname, '..');
 const ARTICLES_DIR = path.join(ROOT, 'src/content/articles');
 const README_PATH = path.join(ROOT, 'README.md');
 
-const FALLBACK = '기타';
-const ORDER = ['톺아보기', '회고', '구현/설계', '트러블슈팅', FALLBACK];
+// 앱(src/lib/categories.ts)과 같은 정의를 공유한다.
+const config = JSON.parse(
+  fs.readFileSync(path.join(ROOT, 'src/config/categories.json'), 'utf-8')
+);
+const FALLBACK = config.fallback;
+const ORDER = [...config.order, FALLBACK];
 
 const START = '<!-- CATEGORY_STATS:START -->';
 const END = '<!-- CATEGORY_STATS:END -->';
@@ -17,6 +21,9 @@ const counts = new Map();
 for (const file of fs.readdirSync(ARTICLES_DIR)) {
   if (!/\.mdx?$/.test(file)) continue;
   const { data } = matter(fs.readFileSync(path.join(ARTICLES_DIR, file), 'utf-8'));
+  // 블로그에 노출되는 글만 집계한다. (getAllArticles와 같은 기준)
+  if (data.private) continue;
+
   const category = String(data.category ?? '').trim() || FALLBACK;
   counts.set(category, (counts.get(category) ?? 0) + 1);
 }
