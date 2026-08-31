@@ -1,0 +1,9 @@
+# 포스트 카테고리 통계를 README.md에 반영한다.
+before=$(git hash-object README.md)
+
+node scripts/update-readme-categories.mjs
+
+# 스크립트가 실제로 README를 갱신했을 때만 스테이징한다.
+if [ "$before" != "$(git hash-object README.md)" ]; then
+  git add README.md
+fi
