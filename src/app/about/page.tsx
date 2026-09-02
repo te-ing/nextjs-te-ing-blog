@@ -1,8 +1,9 @@
 import Layout from '@/components/Layout';
-import Link from 'next/link';
 import AboutSection from '@/components/about/AboutSection';
 import AboutCareer from '@/components/about/AboutCareer';
 import AboutFeaturedPosts from '@/components/about/AboutFeaturedPosts';
+import AboutContact from '@/components/about/AboutContact';
+import { CONTACT_LINKS } from '@/components/about/aboutContants';
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
@@ -12,8 +13,6 @@ export const metadata: Metadata = {
     canonical: '/about',
   },
 };
-
-const LINK_CLASS = 'text-gray-600 hover:text-gray-900 transition-colors';
 
 export default function AboutPage() {
   return (
@@ -47,24 +46,12 @@ export default function AboutPage() {
         </AboutSection>
 
         <AboutSection label="Contact">
-          <div className="flex items-center gap-3.5 text-lg">
-            <a
-              href="https://github.com/te-ing"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={LINK_CLASS}
-            >
-              GitHub
-            </a>
-            <span className="text-gray-300">·</span>
-            <a href="mailto:hi2177@naver.com" className={LINK_CLASS}>
-              Email
-            </a>
-            <span className="text-gray-300">·</span>
-            <Link href="/about/detail" className={LINK_CLASS}>
-              Portfolio
-            </Link>
-          </div>
+          <AboutContact
+            links={[
+              ...CONTACT_LINKS,
+              { label: 'Portfolio', href: '/about/detail' },
+            ]}
+          />
         </AboutSection>
       </div>
     </Layout>
