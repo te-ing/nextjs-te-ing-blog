@@ -17,6 +17,8 @@
 
 <!-- CATEGORY_STATS:END -->
 
+> 이전에 작성한 130개의 포스트는 [Velog](https://velog.io/@te-ing)에서 보실 수 있습니다.
+
 ## 기술 스택
 
 - Next.js 16.0.7
