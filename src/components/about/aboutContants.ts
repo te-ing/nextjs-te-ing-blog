@@ -62,6 +62,85 @@ export const EDUCATION = [
   {
     period: '2021.07 ~ 2021.12',
     school: '프로그래머스 웹 데브코스 수료',
-    detail: '부트캠프 프론트엔드 과정',
+    detail: '프론트엔드 과정',
+  },
+];
+
+export interface CareerItem {
+  name: string;
+  period: string;
+  description: string;
+  projects?: { title: string; description: string }[];
+}
+
+export const CAREER: CareerItem[] = [
+  {
+    name: 'DOWHAT',
+    period: '2025.09 ~ 재직 중',
+    description: '국내외 호텔 IT 솔루션',
+    projects: [
+      {
+        title: '호텔 관리자 페이지 솔루션 개발',
+        description:
+          '체크인, 룸서비스, 청소, 컨텐츠 관리 등 호텔 운영 전반을 다루는 솔루션 개발 및 유지보수',
+      },
+      {
+        title: '호텔 투숙객 페이지 솔루션 개발',
+        description:
+          '사전 체크인, 시설 예약 등 투숙객 대상 서비스 개발 및 유지보수',
+      },
+      {
+        title: '객실 예약을 위한 부킹엔진 유저 페이지 개발',
+        description:
+          '외부 예약 플랫폼을 거치지 않고 호텔에서 직접 예약을 받는 부킹엔진 개발',
+      },
+      {
+        title: '파르나스 호텔 투숙객 모바일 서비스 개발',
+        description:
+          '호텔 내 프로그램 예약 서비스와 빠른 체크인을 위한 모바일 사전 체크인 기능 개발',
+      },
+      {
+        title: '롯데 시그니엘 호텔 현장 웨이팅 기능 개발',
+        description:
+          '호텔 시설 및 식당 웨이팅을 모바일로 신청하는 유저·관리자 기능 개발',
+      },
+      {
+        title: 'KT 셋톱박스 연동 및 스마트TV 컨텐츠 관리 개발',
+        description:
+          '객실 스마트TV를 호텔 관리자와 연동해 룸서비스, OTT 로그아웃, 컨텐츠 관리 제공',
+      },
+    ],
+  },
+  {
+    name: 'SNPLAB',
+    period: '2022.08 ~ 2024.10',
+    description: '마이데이터 거래 서비스',
+    projects: [
+      {
+        title: '자사 서비스 앱 내 웹뷰 기능 개발',
+        description:
+          '포인트 거래, 거래 내역 조회, 투표 커뮤니티, 그룹 챌린지, 출석 등 주요 웹뷰 서비스 개발',
+      },
+      {
+        title: '내부 백오피스 및 B2B 백오피스 개발',
+        description:
+          '공지·투표·챌린지 운영을 위한 내부 기능과 기업 간 데이터 거래를 위한 B2B 기능 개발',
+      },
+      {
+        title: '출퇴근 서비스 앱 기획 및 개발',
+        description:
+          '사원 근태를 관리하는 PWA 앱과 백오피스를 기획·디자인·개발',
+      },
+    ],
+  },
+  {
+    name: '프로그래머스 웹 데브코스 수료',
+    period: '2021.07 ~ 2021.12',
+    description: '프론트엔드 과정',
+  },
+  {
+    name: '홍익대학교 세종캠퍼스 졸업',
+    period: '2015.03 ~ 2021.08',
+    description: '광고홍보학부 전공',
   },
 ];

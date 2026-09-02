@@ -31,9 +31,9 @@ export default function AboutPage() {
         </div>
         <div className="space-y-12">
           <AboutStrengths />
+          <AboutMe />
           <AboutExperience />
           <AboutEducation />
-          <AboutMe />
         </div>
       </div>
     </Layout>
