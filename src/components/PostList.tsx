@@ -33,22 +33,22 @@ export default function PostList({
     return true;
   });
 
+  const hasMore = visibleCount < filteredArticles.length;
+
   useEffect(() => {
+    const el = loadMoreRef.current;
+    if (!el) return;
+
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting) setVisibleCount((prev) => prev + 10);
       },
       { threshold: 1 }
     );
+    observer.observe(el);
 
-    const el = loadMoreRef.current;
-    if (el) observer.observe(el);
-
-    return () => {
-      if (el) observer.unobserve(el);
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+    return () => observer.disconnect();
+  }, [hasMore, selectedTag, selectedCategory, setVisibleCount]);
 
   return (
     <div className="max-w-[800px] mx-auto py-8 px-4">
@@ -99,9 +99,7 @@ export default function PostList({
             </article>
           </Link>
         ))}
-        {visibleCount < filteredArticles.length && (
-          <div ref={loadMoreRef} className="h-10"></div>
-        )}
+        {hasMore && <div ref={loadMoreRef} className="h-10"></div>}
       </div>
     </div>
   );
