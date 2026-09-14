@@ -124,12 +124,41 @@ export interface ProjectCode {
   source: string;
 }
 
+export interface DiagramEndpoint {
+  label: string;
+  sub: string;
+}
+
+export interface DiagramBranch {
+  title: string;
+  items: string[];
+}
+
+export interface DiagramStep {
+  title: string;
+  description?: string;
+  tag?: string;
+  /** 한 단계 안에서 갈라지는 선택지. 2~3개일 때만 사용 */
+  branches?: DiagramBranch[];
+}
+
+/** 절차형 워크플로우 도식. FlowDiagram이 렌더링합니다. */
+export interface ProjectDiagram {
+  title: string;
+  note?: string;
+  from: DiagramEndpoint;
+  to: DiagramEndpoint;
+  steps: DiagramStep[];
+  rules?: string[];
+}
+
 export interface ProjectCase {
   title: string;
   problem: string;
   solution: string;
   /** 수치로 말할 수 있는 결과만 적습니다. 없으면 생략 */
   result?: string;
+  diagram?: ProjectDiagram;
   code?: ProjectCode[];
 }
 
@@ -149,39 +178,121 @@ export const PROJECTS: Project[] = [
   {
     company: 'DOWHAT',
     title: '부킹엔진 Next.js 마이그레이션',
-    lead: 'AI를 활용하여 기존 SPA 부킹엔진을 각 호텔별로 메타태그를 변경할 수 있도록 Next.js로 마이그레이션하였습니다.',
+    lead: '각 호텔별로 메타태그를 변경할 수 있도록 기존 SPA 부킹엔진을 Next.js로 마이그레이션하였습니다.',
     role: '유저 페이지 Next.js 마이그레이션, 결제 모듈 연동, 코딩 컨벤션 · AI 마이그레이션 Skill 수립',
     overview:
-      '4년 전 SPA로 만들어진 레거시 부킹엔진을 Next.js로 마이그레이션하였습니다. AI를 적극적으로 활용하여 기획자, 디자이너 없이 빠르게 개발하였고, AI 개발로 확보한 리소스를 QA에 집중하여 기존 프로젝트 대비 낮은 결함률을 이뤄냈습니다.',
+      'SPA로 만들어진 레거시 부킹엔진을 Next.js로 마이그레이션하였습니다. AI를 적극적으로 활용하여 기획자, 디자이너 없이 빠르게 개발하였고, AI 개발로 확보한 리소스를 QA에 집중하여 기존 프로젝트 대비 낮은 결함률을 이뤄냈습니다.',
     link: {
       label: '회고 포스팅',
       href: '/post/2026-06-30-바이브-코딩-프로젝트-회고',
     },
     cases: [
       {
-        title: '호텔마다 다른 메타태그를 한 코드베이스에서',
+        title: '호텔별 메타태그 노출 문제 해결',
         problem:
-          'SPA에서는 index.html이 하나라 어느 호텔로 들어와도 같은 title·description·OG 이미지가 노출됐습니다. 호텔별 도메인과 브랜드가 다른 서비스에서 치명적이었습니다.',
+          '많은 호텔들이 예약을 공유할 때 객실 이미지 및 호텔 설명이 보여지길 바랬습니다. 하지만 기존 부킹엔진은 SPA로 개발되어, 어느 호텔로 접속해도 같은 메타태그를 노출할 수 밖에 없었습니다.',
         solution:
-          '호텔 슬러그를 라우트 세그먼트로 두고 generateMetadata에서 호텔 정보를 조회해 메타태그를 서버에서 생성했습니다. 호텔 정보는 레이아웃 단위로 한 번만 가져와 하위 페이지가 공유합니다.',
+          '호텔명을 바탕으로 동적 라우팅을 설계하고, 레이아웃의 generateMetadata에서 호텔 정보를 조회해 메타태그를 5분 간격으로 서버에서 생성하도록 했습니다.',
         code: [
           {
-            file: 'app/[hotel]/layout.tsx',
+            file: 'app/[hotelName]/layout.tsx',
             language: 'typescript',
-            source: `// 예시: 실제 코드로 교체 예정
-// 호텔 슬러그로 메타태그를 결정한다. 하위 페이지는 이 레이아웃의 메타를 상속받는다.
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const hotel = await getHotel(params.hotel);
+            source: `// 호텔 정보는 자주 바뀌지 않으니 5분간 ISR 캐시.
+async function fetchHotelInfo(hotelCode: string) {
+  const res = await fetch(
+    \`\${apiUrl}/api/client/common/hotel?hotel_code=\${hotelCode}\`,
+    { next: { revalidate: 300 } }
+  );
+  if (!res.ok) return null;
+  return ((await res.json()) as ApiResponse<HotelRaw>).data;
+}
+
+export async function generateMetadata({ params }: Props) {
+  const hotelCode = resolveHotelName(params.hotelName);
+  if (!hotelCode) return {};
+
+  const hotel = await fetchHotelInfo(hotelCode);
+  if (!hotel) return {};
+ 
+  ...
 
   return {
-    title: \`\${hotel.name} 객실 예약\`,
-    description: hotel.seo.description,
-    openGraph: { images: [hotel.seo.ogImage], locale: hotel.locale },
-    alternates: { canonical: \`https://\${hotel.domain}/booking\` },
+    title,
+    description,
+    openGraph: { title, description, images: image ? [image] : undefined },
   };
 }`,
           },
         ],
+      },
+      {
+        title: 'AI SKILL을 사용한 점진적 마이그레이션',
+        problem:
+          '이 프로젝트는 자바스크립트 SPA를 타입스크립트 Next.js로 마이그레이션 하는 것과 동시에, 서버도 함께 전반적인 리뉴얼 하는 작업이었습니다. 때문에 서버 작업에 맞춰 점진적으로 수정이 필요했습니다.',
+        solution:
+          '원본 반영 절차를 mirror-from-reference Skill로 정리했습니다. 원본은 읽기 전용으로 두고 같은 경로의 파일을 기준으로 삼아, 그대로 복사할 부분과 새로운 구조에 맞게 치환할 부분을 먼저 구분합니다.',
+        diagram: {
+          title: 'mirror-from-reference Skill 절차',
+          note: 'SKILL.md 도식화',
+          from: {
+            label: 'new_booking_user',
+            sub: '원본 · Vite SPA(CSR) · 읽기 전용',
+          },
+          to: {
+            label: 'dowhat_booking_engine_user',
+            sub: '씨마크 버전 · Next.js App Router(SSR)',
+          },
+          steps: [
+            {
+              title: '대상 파일 식별',
+              description:
+                '요청에서 건드릴 파일을 특정합니다. 경로가 불확실하면 이 프로젝트에서 먼저 검색합니다.',
+            },
+            {
+              title: '원본의 같은 경로 파일 읽기',
+              tag: '원본은 읽기 전용',
+              description:
+                '있으면 그 구조를 기준선으로 삼고, 없으면 가장 비슷한 페이지·컴포넌트를 찾아 참고합니다. 원본이 쓰는 공용 컴포넌트·훅·스토어까지 함께 읽습니다.',
+            },
+            {
+              title: '씨마크 쪽 현재 상태 확인',
+              description:
+                '같은 경로의 파일을 읽어 이미 들어간 씨마크 커스터마이징을 파악합니다. 이 변경을 지우지 않는 것이 목표입니다.',
+            },
+            {
+              title: '차이 설계',
+              description: '원본에서 옮길 때 두 가지로 나눕니다.',
+              branches: [
+                {
+                  title: '그대로 복사',
+                  items: [
+                    'UI 구조 · 레이아웃 · 컴포넌트 호출',
+                    '상태 관리 흐름 · 훅 사용',
+                    '라우팅 로직',
+                  ],
+                },
+                {
+                  title: 'Next.js 구조에 맞춰 치환',
+                  items: [
+                    'API 호출 → docs 스펙 기준',
+                    '테마 · 컬러 변수 → 기존 코드 사용',
+                    '이미지 · 아이콘 → 사용자에게 요청',
+                  ],
+                },
+              ],
+            },
+            {
+              title: 'API 스펙 검증',
+              description:
+                'API가 포함된 작업이면 원본이 아니라 문서를 기준으로 봅니다. 요청 · 응답이 원본과 다르면 문서를 따르고, 추측해서 구현하지 않습니다.',
+            },
+            {
+              title: '리뷰',
+              description:
+                '차이만 반영하고 원본의 구조·네이밍을 유지합니다. 기준으로 삼은 원본 파일, 수정한 파일, 치환한 항목, API 문서 확인 결과를 한 줄씩 보고합니다.',
+            },
+          ],
+        },
       },
     ],
     images: [
@@ -208,49 +319,103 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     },
     cases: [
       {
-        title: '호텔마다 다른 커스텀 요구가 공통 로직을 잠식한다',
+        title: '호텔별 커스텀 분기 문제 해결',
         problem:
-          "같은 사전 체크인 화면이라도 호텔마다 필수 입력, 노출 기능, 스타일이 다릅니다. 이를 if (hotel === 'A') 분기로 처리하면 호텔이 늘 때마다 공통 로직을 건드려야 하고 회귀가 생깁니다.",
+          "같은 사전 체크인 화면이라도 호텔마다 필수 입력, 노출 기능, 스타일이 다릅니다. 이를 if (hotel === 'A') 분기로 처리하면 호텔이 추가될 때마다 공통 로직을 수정해야 하고 회귀 오류가 발생합니다.",
         solution:
-          '호텔별 차이를 설정 객체로 분리했습니다. 공통 컴포넌트는 호텔 이름을 모른 채 설정만 읽고, 새 호텔은 객체 하나를 추가하는 것으로 끝납니다.',
+          '호텔별 차이를 brand.config 객체로 분리하고, default 설정 위에 호텔별 값만 덮어쓰는 방식으로 병합했습니다. 서버에서 받은 권한 정보와 합쳐 하나의 ViewModel로 전달하므로, 화면은 호텔을 비교하지 않고 설정 값만 읽습니다. 새 호텔은 객체 하나를 추가하면 됩니다.',
         code: [
           {
-            file: 'entities/hotel/config.ts',
+            file: 'brand.config.ts',
+            note: '실제 코드 · 핵심만 남김',
             language: 'typescript',
-            source: `// 예시: 실제 코드로 교체 예정
-// 호텔별 차이는 이 객체에만 존재한다. 공통 로직은 config를 읽을 뿐 호텔 코드를 비교하지 않는다.
-export const hotelConfigs: Record<HotelCode, HotelConfig> = {
-  SIGNIEL: {
-    theme: signielTheme,
-    features: { waiting: true, preCheckIn: true, roomService: false },
-    preCheckIn: { requireIdCard: true, minGuestAge: 19 },
+            source: `// 호텔별 차이는 이 객체에만 둔다. 적지 않은 키는 default를 따른다.
+const HOTEL_CONFIGS = {
+  default: {
+    authorizationFields: ['name', 'checkInDate'],
+    isConsult: false,
+    useMembership: false,
+    useCheckout: true,
+    hotel_language: 'kr, en',
+    brandColor: '#09194d',
+    brandFont: 'Pretendard, sans-serif',
+    specialFont: 'Libre BaskerVille, sans-serif',
   },
-  PARNAS: {
-    theme: parnasTheme,
-    features: { waiting: false, preCheckIn: true, roomService: true },
-    preCheckIn: { requireIdCard: false },
+  1052: {
+    // 그랜드 인터컨티넨탈 서울 파르나스
+    authorizationFields: ['name'],
+    isConsult: true,
+    customSplash: 'splashImageParnasSeoul',
+    customLogo: true,
+    brandColor: '#AF8D5D',
+    specialFont: 'Optima, sans-serif',
   },
+  1055: {
+    // 웨스틴 조선 서울
+    authorizationFields: ['name'],
+    isConsult: true,
+    hotel_language: 'kr, en, jp, chs',
+    useCheckout: false,
+    brandColor: '#51555A',
+    brandFont: 'Noto Sans KR, sans-serif',
+    specialFont: 'p22-underground, sans-serif',
+  },
+};`,
+          },
+          {
+            file: 'PermissionService.ts · useAuthorizationViewModel.ts',
+            note: '설정 병합과 사용처 · 핵심만 남김',
+            language: 'typescript',
+            source: `// default 위에 호텔별 값만 덮어쓴다.
+const getHotelConfig = (hotelSeq: number): BrandDefaultConfig => {
+  const config =
+    HOTEL_CONFIGS[hotelSeq as keyof typeof HOTEL_CONFIGS];
+  return config
+    ? { ...HOTEL_CONFIGS.default, ...config }
+    : HOTEL_CONFIGS.default;
 };
 
-function PreCheckInForm() {
-  const { preCheckIn } = useHotelConfig();
+// 서버 권한(permission)과 호텔 설정을 합쳐 하나의 ViewModel로 내려준다.
+const permissionService = () => {
+  const { hotelSeq } = useHotelParams();
+  const { data } = usePermissions();
 
-  return (
-    <Form>
-      <GuestFields />
-      {preCheckIn.requireIdCard && <IdCardField />}
-    </Form>
-  );
-}`,
+  const permission = useMemo(() => {
+    if (!data?.permission || !hotelSeq) return null;
+    const brandCustom = getHotelConfig(Number(hotelSeq));
+    return {
+      permissionWithBrand: { ...data.permission, ...brandCustom },
+    };
+  }, [data?.permission, hotelSeq]);
+
+  return { permission };
+};
+
+// 인증 폼의 입력란 구성은 설정의 authorizationFields만 보고 결정한다.
+const { permissionWithBrand } = useHotelData();
+
+const inputFields = useMemo(() => {
+  const fields = permissionWithBrand?.authorizationFields ?? [];
+  return [
+    { type: 'text', label: '객실 번호' },
+    ...(fields.includes('phone')
+      ? [{ type: 'tel', label: '전화번호' }]
+      : []),
+    ...(fields.includes('checkInDate')
+      ? [{ type: 'datePicker', label: '체크인 날짜' }]
+      : []),
+    { type: 'text', label: '예약자 이름' },
+  ];
+}, [permissionWithBrand?.authorizationFields]);`,
           },
         ],
       },
       {
-        title: 'UI 오류가 잦고 겹치면 overlay가 두 겹 뜨던 모달',
+        title: '모달 구조 및 overlay 중첩 문제 해결',
         problem:
-          'Context API + react-modal 기반 모달은 렌더링 로직과 UI가 뒤섞여 UI 수정이 어려웠고, 모달이 겹칠 때 overlay가 중첩됐으며, 열 때마다 불필요한 payload를 넘겨야 했습니다.',
+          'Context API와 react-modal 기반 모달은 렌더링 로직과 UI가 한 곳에 섞여 있어 UI 수정이 어려웠습니다. 모달이 겹치면 overlay가 중첩되었고, 열 때마다 불필요한 payload를 넘겨야 했습니다.',
         solution:
-          '책임을 세 층으로 나눴습니다. Zustand 스토어가 열린 모달 목록만 관리하고, ModalRenderer가 Portal과 overlay까지만 담당하며, BaseModal은 컴파운드 패턴으로 Header·Footer를 갈아 끼울 수 있는 순수 UI로 남겼습니다. react-modal은 제거했습니다.',
+          '책임을 세 층으로 나눴습니다. Zustand 스토어는 열린 모달 목록만 관리하고, ModalRenderer는 Portal과 overlay를 담당하며, BaseModal은 컴파운드 패턴으로 Header와 Footer를 교체할 수 있는 순수 UI로 분리했습니다. react-modal은 제거했습니다.',
         code: [
           {
             file: 'ModalRenderer.jsx',
@@ -323,37 +488,12 @@ function CleaningRequestModal({ roomNo }) {
     ],
     cases: [
       {
-        title: '웹뷰 첫 화면이 뜨기까지 1.1초',
+        title: '웹뷰 초기 로딩 지연 문제 해결',
         problem:
-          '모든 화면이 하나의 번들에 묶여 있어, 출석 한 번 확인하려 해도 포인트 거래·투표·챌린지 코드까지 전부 내려받은 뒤에야 화면이 그려졌습니다.',
+          '모든 화면이 하나의 번들에 묶여 있어, 출석 확인 화면에 진입해도 포인트 거래, 투표, 챌린지 코드까지 모두 내려받은 뒤에 화면이 렌더링되었습니다.',
         solution:
-          '페이지 단위로 코드를 분리해 진입한 화면의 코드만 먼저 받도록 했습니다. 이어서 공통 청크 분리와 리소스 우선순위 조정으로 초기 로딩을 줄였습니다.',
+          '페이지 단위로 코드를 분리해 진입한 화면의 코드만 먼저 받도록 했습니다. 이어서 공통 청크 분리와 리소스 우선순위 조정으로 초기 로딩 시간을 줄였습니다.',
         result: 'LCP 1,100ms에서 400ms로, 약 63% 단축',
-        code: [
-          {
-            file: 'app/routes.tsx',
-            language: 'typescript',
-            source: `// 예시: 실제 코드로 교체 예정
-// 진입한 화면의 코드만 내려받는다. 나머지는 이동 시점에 로드.
-const Attendance = lazy(() => import('@/pages/attendance'));
-const PointTrade = lazy(() => import('@/pages/point-trade'));
-const Vote = lazy(() => import('@/pages/vote'));
-const Challenge = lazy(() => import('@/pages/challenge'));
-
-export function AppRoutes() {
-  return (
-    <Suspense fallback={<PageSkeleton />}>
-      <Routes>
-        <Route path="/attendance" element={<Attendance />} />
-        <Route path="/point" element={<PointTrade />} />
-        <Route path="/vote/*" element={<Vote />} />
-        <Route path="/challenge/*" element={<Challenge />} />
-      </Routes>
-    </Suspense>
-  );
-}`,
-          },
-        ],
       },
     ],
     images: [
@@ -381,31 +521,64 @@ export function AppRoutes() {
     ],
     cases: [
       {
-        title: '사무실 밖에서 찍는 출근을 어떻게 막을까',
+        title: '사무실 외부 출퇴근 기록 문제 해결',
         problem:
-          '버튼만 누르면 되는 출퇴근은 사무실 밖에서도 기록됩니다. GPS만 쓰면 실내에서 오차가 크고, IP만 쓰면 VPN이나 테더링에 취약합니다.',
+          '버튼만 누르면 기록되는 출퇴근은 사무실 밖에서도 가능했습니다. GPS만 사용하면 실내 오차가 크고, IP만 사용하면 VPN이나 테더링에 취약합니다.',
         solution:
-          'Geolocation API로 사무실 반경을 검증하고, ipify로 얻은 공인 IP가 사내망인지 함께 확인했습니다. 두 근거 중 하나라도 확실하면 기록하고, 어떤 근거로 통과했는지 남겨 관리자가 사후 확인할 수 있게 했습니다.',
+          'Geolocation API로 관리자가 등록한 사무실 좌표와 반경 안에 있는지 검증하고, ipify로 얻은 공인 IP가 사내망 목록에 있는지 함께 확인했습니다. 두 검증 상태를 화면에 각각 표시하고, 하나라도 통과하면 출퇴근 버튼을 활성화했습니다.',
         result: 'NIPA 사업 선정, 7개 기업에 SaaS 형태로 판매',
         code: [
           {
-            file: 'server/attendance/verify.ts',
+            file: 'useCheckGps.tsx · useCheckWifi.tsx · Commute.tsx',
+            note: '실제 코드 · 핵심만 남김',
             language: 'typescript',
-            source: `// 예시: 실제 코드로 교체 예정
-// GPS 반경과 사내망 IP를 함께 검증한다. 통과 근거를 기록해 관리자가 사후 확인할 수 있게 한다.
-export async function verifyCheckIn({ coords, ip }: CheckInInput) {
-  const office = await getOfficeLocation();
+            source: `// 두 좌표 사이 거리(m)를 haversine으로 구해 반경 안인지 판단한다.
+function isWithinDistance(
+  base: number[],
+  target: number[],
+  scope: number
+) {
+  return haversine(base[0], base[1], target[0], target[1]) <= scope;
+}
 
-  const distance = haversine(coords, office.coords); // m
-  const inRadius = distance <= office.radiusMeters; // 예: 150m
-  const inOfficeNetwork = office.allowedIps.includes(ip); // ipify로 얻은 공인 IP
+// GPS: 위치가 바뀔 때마다 등록된 사무실 반경(scope) 안인지 확인한다.
+const id = navigator.geolocation.watchPosition(
+  ({ coords: { latitude, longitude } }) => {
+    const isWithin = commuteInfo.gps.some((office) =>
+      isWithinDistance(
+        [latitude, longitude],
+        office.gps.split(',').map(Number),
+        office.scope
+      )
+    );
+    setIsGps(isWithin);
+  },
+  () => console.log('위치 가져오기 실패'),
+  { enableHighAccuracy: true }
+);
 
-  if (!inRadius && !inOfficeNetwork) {
-    throw new CheckInError('사무실 위치에서만 출근 기록이 가능합니다.');
-  }
+// IP: 5초마다 ipify로 공인 IP를 받아 사내망 IP 목록과 비교한다.
+const timer = setInterval(() => {
+  fetchWiFiPublicIp().then(({ ip }) => {
+    setIsWifi(commuteInfo.ip.some((item) => item.ip === ip));
+  });
+}, 5000);
 
-  return { distance, verifiedBy: inRadius ? 'gps' : 'ip' };
-}`,
+// 두 근거를 각각 표시하고, 하나라도 통과하면 출퇴근 버튼을 연다.
+<ul className={S.status_box}>
+  <li>
+    <span className={S.title}>WiFi</span>
+    <span className={cx(S.status, { [S.active]: isWifi })} />
+  </li>
+  <li>
+    <span className={S.title}>GPS</span>
+    <span className={cx(S.status, { [S.active]: isGps })} />
+  </li>
+</ul>
+<CommuteBtn
+  employeeId={employee.employee_id}
+  isPermit={isWifi || isGps}
+/>`,
           },
         ],
       },

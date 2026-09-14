@@ -2,6 +2,7 @@ import Link from 'next/link';
 import { PROJECTS } from './aboutContants';
 import PortfolioImage from './PortfolioImage';
 import CodeBlock from './CodeBlock';
+import FlowDiagram from './FlowDiagram';
 
 const EYEBROW_CLASS = 'text-xs tracking-wider uppercase text-gray-500';
 const SPEC_LABEL_CLASS =
@@ -79,6 +80,7 @@ export default function AboutProjects() {
                         )}
                       </dl>
                     </div>
+                    {item.diagram && <FlowDiagram {...item.diagram} />}
                     {item.code?.map((code) => (
                       <CodeBlock key={`${item.title}-${code.file}`} {...code} />
                     ))}
