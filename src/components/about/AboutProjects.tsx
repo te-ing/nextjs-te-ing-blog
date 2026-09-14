@@ -3,10 +3,9 @@ import { PROJECTS } from './aboutContants';
 import PortfolioImage from './PortfolioImage';
 import CodeBlock from './CodeBlock';
 
-const EYEBROW_CLASS =
-  'font-mono text-xs tracking-[0.16em] uppercase text-gray-500';
+const EYEBROW_CLASS = 'text-xs tracking-wider uppercase text-gray-500';
 const SPEC_LABEL_CLASS =
-  'font-mono text-[11px] tracking-[0.14em] uppercase text-gray-400 pt-0.5';
+  'text-[11px] tracking-wider uppercase text-gray-400 pt-0.5';
 
 export default function AboutProjects() {
   return (

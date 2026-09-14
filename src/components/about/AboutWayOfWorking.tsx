@@ -53,7 +53,7 @@ export default function AboutWayOfWorking() {
                           href={pr.href}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="font-mono text-[13px] text-gray-400 hover:text-gray-900 transition-colors"
+                          className="text-[13px] text-gray-400 hover:text-gray-900 transition-colors"
                         >
                           {pr.label}
                         </a>

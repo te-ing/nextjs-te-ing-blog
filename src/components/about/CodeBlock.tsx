@@ -19,7 +19,7 @@ export default function CodeBlock({
 
   return (
     <figure className="flex flex-col gap-1.5 print:break-inside-avoid">
-      <figcaption className="font-mono text-[12px] text-gray-500">
+      <figcaption className="text-[12px] text-gray-500">
         {file}
         {note && <span className="text-gray-400"> · {note}</span>}
       </figcaption>
