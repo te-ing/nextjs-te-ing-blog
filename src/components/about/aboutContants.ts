@@ -200,7 +200,7 @@ export const PROJECTS: Project[] = [
             source: `// 호텔 정보는 자주 바뀌지 않으니 5분간 ISR 캐시.
 async function fetchHotelInfo(hotelCode: string) {
   const res = await fetch(
-    \`\${apiUrl}/api/client/common/hotel?hotel_code=\${hotelCode}\`,
+    \`\${apiUrl}/api/hotel?hotel_code=\${hotelCode}\`,
     { next: { revalidate: 300 } }
   );
   if (!res.ok) return null;
@@ -235,12 +235,12 @@ export async function generateMetadata({ params }: Props) {
           title: 'mirror-from-reference Skill 절차',
           note: 'SKILL.md 도식화',
           from: {
-            label: 'new_booking_user',
+            label: '원본 저장소',
             sub: '원본 · Vite SPA(CSR) · 읽기 전용',
           },
           to: {
-            label: 'dowhat_booking_engine_user',
-            sub: '씨마크 버전 · Next.js App Router(SSR)',
+            label: '호텔 전용 저장소',
+            sub: '포크 버전 · Next.js App Router(SSR)',
           },
           steps: [
             {
@@ -255,9 +255,9 @@ export async function generateMetadata({ params }: Props) {
                 '있으면 그 구조를 기준선으로 삼고, 없으면 가장 비슷한 페이지·컴포넌트를 찾아 참고합니다. 원본이 쓰는 공용 컴포넌트·훅·스토어까지 함께 읽습니다.',
             },
             {
-              title: '씨마크 쪽 현재 상태 확인',
+              title: '이 프로젝트의 현재 상태 확인',
               description:
-                '같은 경로의 파일을 읽어 이미 들어간 씨마크 커스터마이징을 파악합니다. 이 변경을 지우지 않는 것이 목표입니다.',
+                '같은 경로의 파일을 읽어 이미 들어간 호텔 전용 커스터마이징을 파악합니다. 이 변경을 지우지 않는 것이 목표입니다.',
             },
             {
               title: '차이 설계',
@@ -298,7 +298,7 @@ export async function generateMetadata({ params }: Props) {
     images: [
       {
         src: bookingEngineDesktop,
-        alt: '씨마크 호텔 부킹엔진 예약 화면',
+        alt: '호텔 부킹엔진 예약 화면',
       },
       {
         src: bookingEngineMobile,
@@ -308,9 +308,9 @@ export async function generateMetadata({ params }: Props) {
   },
   {
     company: 'DOWHAT',
-    title: '호텔 관리자와 투숙객 모두를 위한 SaaS 개발',
-    lead: '시그니엘, 조선 팰리스, 파르나스 등 5성급 호텔이 사용하는 운영 SaaS의 유저·관리자 페이지를 개발하고 있습니다.',
-    role: '유저 · 관리자 페이지 개발, 공용 컴포넌트 및 모달 구조 설계, 차세대 플랫폼 사전 체크인 모듈 담당',
+    title: '호텔 관리자 및 투숙객을 위한 호텔 대상 서비스 개발',
+    lead: '시그니엘, 조선 팰리스, 파르나스 등 국내외 최정상급 5성급 호텔이 사용하는 유저·관리자 페이지를 개발하고 있습니다.',
+    role: '유저 · 관리자 페이지 개발, 공용 컴포넌트 및 모달 구조 설계, 리뉴얼 유저페이지 개발',
     overview:
       '사전 체크인, 현장 웨이팅, 룸서비스, KT 셋톱박스 연동을 다뤘습니다. 요구사항 외에 기존 컴포넌트와 구조가 가진 문제를 해결하기도 하였습니다. 호텔마다 다른 커스텀을 쉽게 관리하기 위해 호텔별 커스텀 기능과 스타일은 객체로 분리해 공통 로직을 건드리지 않고 확장하도록 했습니다. 또한 잦은 UI 오류와 복잡한 구조로 만들어진 모달을 렌더링 로직과 UI 계층으로 나눠 문제를 해결했습니다.',
     link: {
@@ -327,7 +327,6 @@ export async function generateMetadata({ params }: Props) {
         code: [
           {
             file: 'brand.config.ts',
-            note: '실제 코드 · 핵심만 남김',
             language: 'typescript',
             source: `// 호텔별 차이는 이 객체에만 둔다. 적지 않은 키는 default를 따른다.
 const HOTEL_CONFIGS = {
@@ -337,34 +336,31 @@ const HOTEL_CONFIGS = {
     useMembership: false,
     useCheckout: true,
     hotel_language: 'kr, en',
-    brandColor: '#09194d',
+    brandColor: '#ffffff',
     brandFont: 'Pretendard, sans-serif',
     specialFont: 'Libre BaskerVille, sans-serif',
   },
-  1052: {
-    // 그랜드 인터컨티넨탈 서울 파르나스
+  A: {
     authorizationFields: ['name'],
     isConsult: true,
-    customSplash: 'splashImageParnasSeoul',
+    customSplash: 'splashImage',
     customLogo: true,
-    brandColor: '#AF8D5D',
+    brandColor: '#aaaaaa',
     specialFont: 'Optima, sans-serif',
   },
-  1055: {
-    // 웨스틴 조선 서울
+  B: {
     authorizationFields: ['name'],
     isConsult: true,
     hotel_language: 'kr, en, jp, chs',
     useCheckout: false,
-    brandColor: '#51555A',
+    brandColor: '#bbbbbb',
     brandFont: 'Noto Sans KR, sans-serif',
-    specialFont: 'p22-underground, sans-serif',
+    specialFont: 'Georgia, serif',
   },
 };`,
           },
           {
             file: 'PermissionService.ts · useAuthorizationViewModel.ts',
-            note: '설정 병합과 사용처 · 핵심만 남김',
             language: 'typescript',
             source: `// default 위에 호텔별 값만 덮어쓴다.
 const getHotelConfig = (hotelSeq: number): BrandDefaultConfig => {
@@ -419,7 +415,6 @@ const inputFields = useMemo(() => {
         code: [
           {
             file: 'ModalRenderer.jsx',
-            note: '포스팅 실제 코드 · 일부 축약',
             language: 'javascript',
             source: `export const ModalRenderer = () => {
   const modals = useModalStore((s) => s.modals);
@@ -449,7 +444,7 @@ const inputFields = useMemo(() => {
             file: '사용 예',
             note: 'BaseModal 컴파운드 패턴',
             language: 'javascript',
-            source: `open(CleaningRequestModal, { roomNo: '1203' });
+            source: `open(CleaningRequestModal, { roomNo: '1000' });
 
 function CleaningRequestModal({ roomNo }) {
   return (
@@ -490,9 +485,9 @@ function CleaningRequestModal({ roomNo }) {
       {
         title: '웹뷰 초기 로딩 지연 문제 해결',
         problem:
-          '모든 화면이 하나의 번들에 묶여 있어, 출석 확인 화면에 진입해도 포인트 거래, 투표, 챌린지 코드까지 모두 내려받은 뒤에 화면이 렌더링되었습니다.',
+          '모든 화면이 하나의 번들에 묶여 있어, 출석 확인 화면에 진입해도 포인트 거래, 투표 등 모든 데이터를 내려받은 뒤에 렌더링되어 초기 로딩시간이 길어졌습니다.',
         solution:
-          '페이지 단위로 코드를 분리해 진입한 화면의 코드만 먼저 받도록 했습니다. 이어서 공통 청크 분리와 리소스 우선순위 조정으로 초기 로딩 시간을 줄였습니다.',
+          '페이지 단위로 코드를 분리해 진입한 화면의 코드만 먼저 받도록 했습니다. 이어서 공통 청크 분리와 리소스 우선순위 조정으로 초기 로딩 시간을 줄였습니다. 그 외 gzip, 이미지 지연 로딩 등을 적용하였습니다.',
         result: 'LCP 1,100ms에서 400ms로, 약 63% 단축',
       },
     ],
@@ -513,7 +508,7 @@ function CleaningRequestModal({ roomNo }) {
     lead: '사내 출퇴근 시스템 부재를 해결하기 위해 기획부터 프론트엔드, 서버까지 직접 개발하였습니다.',
     role: '서비스 기획 · 디자인, Next.js 기반 서버/프론트엔드 통합 개발, LDAP 로그인, 근태 관리 백오피스',
     overview:
-      'GPS와 IP로 출퇴근 위치를 판별합니다. 설치 없이 쓸 수 있도록 PWA로 배포했습니다. 사원은 앱에서 출퇴근을 기록하고 관리자는 백오피스에서 근태를 확인합니다. 사내 서비스로 시작했지만 NIPA 사업에 선정되어 7개 기업에 SaaS 형태로 판매한 성과를 이뤄냈습니다.',
+      'GPS와 IP로 출퇴근 위치를 판별하며, PWA로 배포하여 앱의 사용성을 구현했습니다. 앱은 출퇴근을 기록하고 백오피스는 근태를 관리할 수 있습니다. 사내 서비스로 시작했지만 NIPA 사업에 선정되어 7개 기업에 판매하는 성과를 이뤄냈습니다.',
     highlights: [
       'Geolocation API와 ipify로 출퇴근 시 GPS와 IP를 검증하는 기능 개발',
       'LDAP를 활용해 별도 회원가입 없이 사내 계정으로 로그인하는 기능 개발',
@@ -523,14 +518,12 @@ function CleaningRequestModal({ roomNo }) {
       {
         title: '사무실 외부 출퇴근 기록 문제 해결',
         problem:
-          '버튼만 누르면 기록되는 출퇴근은 사무실 밖에서도 가능했습니다. GPS만 사용하면 실내 오차가 크고, IP만 사용하면 VPN이나 테더링에 취약합니다.',
+          '출퇴근 기록에 대한 신뢰도가 필요했습니다. 버튼만 누르면 기록되는 출퇴근은 악용될 우려가 있었습니다.',
         solution:
           'Geolocation API로 관리자가 등록한 사무실 좌표와 반경 안에 있는지 검증하고, ipify로 얻은 공인 IP가 사내망 목록에 있는지 함께 확인했습니다. 두 검증 상태를 화면에 각각 표시하고, 하나라도 통과하면 출퇴근 버튼을 활성화했습니다.',
-        result: 'NIPA 사업 선정, 7개 기업에 SaaS 형태로 판매',
         code: [
           {
             file: 'useCheckGps.tsx · useCheckWifi.tsx · Commute.tsx',
-            note: '실제 코드 · 핵심만 남김',
             language: 'typescript',
             source: `// 두 좌표 사이 거리(m)를 haversine으로 구해 반경 안인지 판단한다.
 function isWithinDistance(

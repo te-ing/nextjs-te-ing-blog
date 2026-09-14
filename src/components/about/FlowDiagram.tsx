@@ -28,7 +28,7 @@ export default function FlowDiagram({
         {note && <span className="text-gray-400"> · {note}</span>}
       </figcaption>
 
-      {/* 원본 → SEAMARQ: 어디서 어디로 옮기는 작업인지 먼저 보여준다 */}
+      {/* 원본 → 이 프로젝트: 어디서 어디로 옮기는 작업인지 먼저 보여준다 */}
       <div className="grid grid-cols-1 sm:grid-cols-[1fr_auto_1fr] gap-2 sm:gap-3 print:grid-cols-[1fr_auto_1fr] print:break-inside-avoid">
         <Endpoint {...from} />
         <div
