@@ -19,10 +19,24 @@ export default function AboutProjects() {
               <h3 className="text-2xl font-bold text-gray-900 tracking-[-0.02em] leading-[1.4] text-pretty">
                 {project.title}
               </h3>
-              <p className="text-lg leading-[1.7] text-gray-700 text-pretty">
-                {project.lead}
-              </p>
             </div>
+
+            {project.images.length > 0 && (
+              <div className="flex gap-3 overflow-x-auto pb-2 print:overflow-visible print:flex-wrap print:break-inside-avoid">
+                {project.images.map((image) => (
+                  <PortfolioImage
+                    key={image.src.src}
+                    image={image}
+                    fit="height"
+                    className="h-52 md:h-64 shrink-0 print:h-44"
+                  />
+                ))}
+              </div>
+            )}
+
+            <p className="text-lg leading-[1.7] text-gray-700 text-pretty">
+              {project.lead}
+            </p>
 
             <dl className="grid grid-cols-[100px_1fr] md:grid-cols-[120px_1fr] gap-x-4 py-4 border-y border-gray-100 text-sm">
               <dt className={SPEC_LABEL_CLASS}>Role</dt>
@@ -85,19 +99,6 @@ export default function AboutProjects() {
                       <CodeBlock key={`${item.title}-${code.file}`} {...code} />
                     ))}
                   </div>
-                ))}
-              </div>
-            )}
-
-            {project.images.length > 0 && (
-              <div className="flex gap-3 overflow-x-auto pb-2 print:overflow-visible print:flex-wrap print:break-inside-avoid">
-                {project.images.map((image) => (
-                  <PortfolioImage
-                    key={image.src.src}
-                    image={image}
-                    fit="height"
-                    className="h-52 md:h-64 shrink-0 print:h-44"
-                  />
                 ))}
               </div>
             )}
